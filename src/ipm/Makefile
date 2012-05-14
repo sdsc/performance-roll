@@ -114,6 +114,7 @@ build:
 	mount --bind $(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER) /opt/papi/$(ROLLCOMPILER); \
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT); \
 	tar zxvf $(SOURCE).tar.gz
+	cp patch-files/configure $(SOURCE)
 	( \
 	  cd $(SOURCE); \
 	  $(COMPILERSETUP); \
@@ -124,6 +125,8 @@ build:
           export LDFLAGS=-L/opt/mxml/$(ROLLCOMPILER)/lib; \
           export CFLAGS=-I/opt/mxml/$(ROLLCOMPILER)/include; \
           export CXXFLAGS=-I/opt/mxml/$(ROLLCOMPILER)/include; \
+          export MPIF77=`which mpif77`; \
+          export MPICC=`which mpicc`; \
           ./configure --prefix=$(PKGROOT) --with-papi=/opt/papi/$(ROLLCOMPILER) --enable-posixio=yes --enable-parser --disable-shared; \
           make \
          )
