@@ -63,13 +63,20 @@ endif
 ifndef ROLLMPI
   ROLLMPI = openmpi
 endif
-
-PKGROOT = /opt/tau/$(ROLLCOMPILER)/$(ROLLMPI)
-SOURCE = tau-$(VERSION)
+PKGROOT = /opt/ipm/$(ROLLCOMPILER)/$(ROLLMPI)
+SOURCE = ipm-$(VERSION)
 REDHAT.ROOT = $(PWD)/../../
+COMPILERSETUP = \
+  if test -e /etc/profile.d/modules.sh; then \
+    . /etc/profile.d/modules.sh; \
+    module load $(ROLLCOMPILER); \
+  fi
 
-RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
-
+ifeq ("$(ROLLNETWORK)", "eth")
+  MPIMODULE = $(ROLLMPI)
+else
+  MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
+endif
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
@@ -83,46 +90,61 @@ MPISETUP = \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
 
--include $(ROCKSROOT)/etc/Rules.mk
-
-COMPILERSETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module load $(ROLLCOMPILER); \
-  fi
-
-
 CCOMP = gcc
 CPPCOMP = g++
 FORTRAN = gfortran
 ifeq ("$(ROLLCOMPILER)", "intel")
   CCOMP = icc
   CPPCOMP = icpc
-  FORTRAN = intel
+  FORTRAN = ifort
 else ifeq ("$(ROLLCOMPILER)", "pgi")
   CCOMP = pgcc
   CPPCOMP = pgCC
-  FORTRAN = pgi
+  FORTRAN = pgf77
 endif
 
-build:
-	tar zxvf $(SOURCE).tar.gz
+-include $(ROCKSROOT)/etc/Rules.mk
 
-install::
+build:
 	mkdir -p $(PKGROOT)
 	mkdir -p $(ROOT)/$(PKGROOT)
-	mount --bind $(REDHAT.ROOT)/src/build-pdt-$(ROLLCOMPILER) /opt/pdt/$(ROLLCOMPILER)
-	mount --bind $(ROOT)/$(PKGROOT)  $(PKGROOT)
+	mkdir -p /opt/mxml/$(ROLLCOMPILER)
+	mkdir -p /opt/papi/$(ROLLCOMPILER)
+	mount --bind $(REDHAT.ROOT)/src/build-mxml-$(ROLLCOMPILER) /opt/mxml/$(ROLLCOMPILER); \
+	mount --bind $(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER) /opt/papi/$(ROLLCOMPILER); \
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT); \
+	tar zxvf $(SOURCE).tar.gz
 	( \
-	  $(COMPILERSETUP); \
-	  $(MPISETUP); \
 	  cd $(SOURCE); \
-	  ./installtau -prefix=$(PKGROOT) -cc=$(CCOMP) -c++=$(CPPCOMP) \
-	               -fortran=$(FORTRAN) -mpi -mpiinc=$${MPI_HOME}/include \
-	               -mpilib=$${MPI_HOME}/lib -pdt=/opt/pdt/$(ROLLCOMPILER)\
-	)
+	  $(COMPILERSETUP); \
+ 	  $(MPISETUP); \
+          export CC=$(CCOMP); \
+          export F77=$(FORTRAN); \
+          export CXX=$(CPPCOMP); \
+          export LDFLAGS=-L/opt/mxml/$(ROLLCOMPILER)/lib; \
+          export CFLAGS=-I/opt/mxml/$(ROLLCOMPILER)/include; \
+          export CXXFLAGS=-I/opt/mxml/$(ROLLCOMPILER)/include; \
+          ./configure --prefix=$(PKGROOT) --with-papi=/opt/papi/$(ROLLCOMPILER) --enable-posixio=yes --enable-parser --disable-shared; \
+          make \
+         )
+	umount /opt/mxml/$(ROLLCOMPILER)
+	umount /opt/papi/$(ROLLCOMPILER)
 	umount $(PKGROOT)
-	umount /opt/pdt/$(ROLLCOMPILER)
+
+install::
+	mkdir -p /opt/mxml/$(ROLLCOMPILER)
+	mkdir -p /opt/papi/$(ROLLCOMPILER)
+	mkdir -p $(PKGROOT)
+	mount --bind $(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER) /opt/papi/$(ROLLCOMPILER); \
+	mount --bind $(REDHAT.ROOT)/src/build-mxml-$(ROLLCOMPILER) /opt/mxml/$(ROLLCOMPILER); \
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT); \
+	( \
+            cd $(SOURCE); \
+	    make install; \
+        )
+	umount $(PKGROOT)
+	umount /opt/papi/$(ROLLCOMPILER)
+	umount /opt/mxml/$(ROLLCOMPILER)
 
 clean::
 	rm -rf $(SOURCE)

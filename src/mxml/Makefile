@@ -57,31 +57,12 @@
 ifndef ROLLCOMPILER
   ROLLCOMPILER = gnu
 endif
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-ifndef ROLLMPI
-  ROLLMPI = openmpi
-endif
 
-PKGROOT = /opt/tau/$(ROLLCOMPILER)/$(ROLLMPI)
-SOURCE = tau-$(VERSION)
+PKGROOT = /opt/mxml/$(ROLLCOMPILER)
+SOURCE = mxml-$(VERSION)
 REDHAT.ROOT = $(PWD)/../../
 
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
-
-MPISETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module load $(MPIMODULE); \
-  fi; \
-  export MPI_HOME=`which mpicxx | perl -pe 's!/bin/.*!!'`; \
-  if test -z "$${MPI_HOME}"; then \
-    export MPI_HOME=/opt/$(ROLLMPI); \
-  fi; \
-  echo Using MPI from $${MPI_HOME}; \
-  export PATH=$${PATH}:$${MPI_HOME}/bin; \
-  export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
 
 -include $(ROCKSROOT)/etc/Rules.mk
 
@@ -91,18 +72,16 @@ COMPILERSETUP = \
     module load $(ROLLCOMPILER); \
   fi
 
-
-CCOMP = gcc
 CPPCOMP = g++
-FORTRAN = gfortran
+CC = gcc
+CONFIGURE_FLAGS =
 ifeq ("$(ROLLCOMPILER)", "intel")
-  CCOMP = icc
   CPPCOMP = icpc
-  FORTRAN = intel
+  CCOMP = icc
+  CONFIGURE_FLAGS = -gcc
 else ifeq ("$(ROLLCOMPILER)", "pgi")
-  CCOMP = pgcc
   CPPCOMP = pgCC
-  FORTRAN = pgi
+  CCOMP = pgcc
 endif
 
 build:
@@ -111,18 +90,20 @@ build:
 install::
 	mkdir -p $(PKGROOT)
 	mkdir -p $(ROOT)/$(PKGROOT)
-	mount --bind $(REDHAT.ROOT)/src/build-pdt-$(ROLLCOMPILER) /opt/pdt/$(ROLLCOMPILER)
-	mount --bind $(ROOT)/$(PKGROOT)  $(PKGROOT)
+	mkdir -p $(REDHAT.ROOT)/src/build-mxml-$(ROLLCOMPILER)
+	mount --bind  $(REDHAT.ROOT)/src/build-mxml-$(ROLLCOMPILER) $(PKGROOT)
 	( \
 	  $(COMPILERSETUP); \
-	  $(MPISETUP); \
+	  export CC=$(CCOMP); \
+	  export CFLAGS=""; \
+	  export CXX=$(CPPCOMP); \
 	  cd $(SOURCE); \
-	  ./installtau -prefix=$(PKGROOT) -cc=$(CCOMP) -c++=$(CPPCOMP) \
-	               -fortran=$(FORTRAN) -mpi -mpiinc=$${MPI_HOME}/include \
-	               -mpilib=$${MPI_HOME}/lib -pdt=/opt/pdt/$(ROLLCOMPILER)\
+	  ./configure -prefix=$(PKGROOT); \
+	  make; \
+	  make install \
 	)
 	umount $(PKGROOT)
-	umount /opt/pdt/$(ROLLCOMPILER)
+	cp -r $(REDHAT.ROOT)/src/build-mxml-$(ROLLCOMPILER)/* $(ROOT)/$(PKGROOT)
 
 clean::
 	rm -rf $(SOURCE)

@@ -1,0 +1,29 @@
+<?xml version="1.0" standalone="no"?>
+
+<kickstart>
+
+<description>
+PDT Program Database Toolkit
+http://www.cs.uoregon.edu/research/pdt/home.php
+TAU Portable Profiling Package
+http://www.cs.uoregon.edu/research/paracomp/tau
+</description>
+
+<copyright>
+Copyright (c) 2000 - 2011 The Regents of the University of California.
+All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
+</copyright>
+
+<changelog>
+</changelog>
+
+
+<package>pdt_ROLLCOMPILER</package>
+<package>mxml_ROLLCOMPILER</package>
+<package>tau_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
+<package>ipm_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
+
+<post>
+</post>
+
+</kickstart>
