@@ -22,6 +22,7 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 <package>mxml_ROLLCOMPILER</package>
 <package>tau_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
 <package>ipm_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
+<package>valgrind</package>
 
 <post>
 </post>
