@@ -87,7 +87,6 @@ endif
 
 build:
 	tar zxvf $(SOURCE).tar.gz
-	cp patch-files/configure $(SOURCE)
 
 install::
 	mkdir -p $(PKGROOT)
