@@ -68,7 +68,6 @@ build:
 	tar zxvf $(SOURCE).tgz
 	( \
 	  cd $(SOURCE); \
-	  $(COMPILERSETUP); \
 	  ./configure --prefix=$(PKGROOT) ; \
 	  make \
 	)

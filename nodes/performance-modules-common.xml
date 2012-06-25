@@ -102,6 +102,23 @@ END
                /opt/modulefiles/applications/.$COMPILER/papi/.version
 done
 
+<!-- VALGRIND -->
+/bin/mkdir -m 0755 -p /opt/modulefiles/applications/valgrind
+
+  cat &gt; /opt/modulefiles/applications/valgrind/3.7.0  &lt;&lt; END
+#%Module1.0
+prepend-path PATH /opt/valgrind/bin
+END
+  chmod 0644  /opt/modulefiles/applications/valgrind/3.7.0
+
+  cat &gt; /opt/modulefiles/applications/valgrind/.version.3.7.0 &lt;&lt; END
+#%Module1.0
+set ModulesVersion "4.2.1"
+END
+  chmod 0644 /opt/modulefiles/applications/.$COMPILER/valgrind/.version.3.7.0
+
+/bin/ln -s /opt/modulefiles/applications/.$COMPILER/valgrind/.version.3.7.0 \
+               /opt/modulefiles/applications/.$COMPILER/valgrind/.version
 <!-- TAU -->
 
   for COMPILER in `ls /opt/tau`; do
