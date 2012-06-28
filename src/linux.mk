@@ -61,4 +61,4 @@ SRCDIRS = `find . -maxdepth 1 -type d \
         -not -name mxml \
         -not -name papi \
 	-not -name CVS \
-	-not -name .` pdt tau papi mxml ipm
+	-not -name .` pdt papi tau mxml ipm
