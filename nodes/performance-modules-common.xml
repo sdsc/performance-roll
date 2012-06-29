@@ -123,7 +123,7 @@ END
 
   for COMPILER in `ls /opt/tau`; do
     /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.$COMPILER/tau
-   cat &gt; /opt/modulefiles/applications/.$COMPILER/tau/2.19 &lt;&lt; END
+   cat &gt; /opt/modulefiles/applications/.$COMPILER/tau/2.21.3 &lt;&lt; END
 #%Module1.0
 if { ! [info exists env(MPIHOME)] } {
   puts stderr "Need to load an mpi module first"
@@ -142,17 +142,18 @@ if { ! [info exists env(MPIHOME)] } {
 }
 prepend-path PATH /opt/tau/$COMPILER/\$mpiType/x86_64/bin
 prepend-path LD_LIBRARY_PATH /opt/tau/$COMPILER/\$mpiType/x86_64/lib
+prepend-path LD_LIBRARY_PATH /opt/papi/$COMPILER/lib
 END
 
-   chmod 0644 /opt/modulefiles/applications/.$COMPILER/tau/2.19
+   chmod 0644 /opt/modulefiles/applications/.$COMPILER/tau/2.21.3
 
-cat &gt; /opt/modulefiles/applications/.$COMPILER/tau/.version.2.19 &lt;&lt; END
+cat &gt; /opt/modulefiles/applications/.$COMPILER/tau/.version.2.21.3 &lt;&lt; END
 #%Module1.0
-set ModulesVersion "2.19"
+set ModulesVersion "2.21.3"
 END
-   chmod 0664 /opt/modulefiles/applications/.$COMPILER/tau/.version.2.19
+   chmod 0664 /opt/modulefiles/applications/.$COMPILER/tau/.version.2.21.3
 
-  /bin/ln -s /opt/modulefiles/applications/.$COMPILER/tau/.version.2.19 \
+  /bin/ln -s /opt/modulefiles/applications/.$COMPILER/tau/.version.2.21.3 \
              /opt/modulefiles/applications/.$COMPILER/tau/.version
 done
 
