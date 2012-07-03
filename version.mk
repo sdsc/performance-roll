@@ -1,5 +1,5 @@
 ROLLNAME = performance$(ROLLSUFFIX)
-RELEASE  = 3
+RELEASE  = 4
 COLOR    = orange
 
 REDHAT.ROOT = $(PWD)

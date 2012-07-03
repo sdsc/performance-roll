@@ -180,6 +180,7 @@ if { ! [info exists env(MPIHOME)] } {
   exit
 }
 prepend-path PATH /opt/ipm/$COMPILER/\$mpiType/bin
+setenv IPM_BASE /opt/ipm/$COMPILER/\$mpiType
 prepend-path LD_LIBRARY_PATH /opt/ipm/$COMPILER/\$mpiType/lib
 prepend-path LD_LIBRARY_PATH /opt/mxml/$COMPILER/lib
 prepend-path LD_LIBRARY_PATH /opt/papi/$COMPILER/lib
