@@ -115,10 +115,10 @@ END
 #%Module1.0
 set ModulesVersion "4.2.1"
 END
-  chmod 0644 /opt/modulefiles/applications/.$COMPILER/valgrind/.version.3.7.0
+  chmod 0644 /opt/modulefiles/applications/valgrind/.version.3.7.0
 
-/bin/ln -s /opt/modulefiles/applications/.$COMPILER/valgrind/.version.3.7.0 \
-               /opt/modulefiles/applications/.$COMPILER/valgrind/.version
+/bin/ln -s /opt/modulefiles/applications/valgrind/.version.3.7.0 \
+               /opt/modulefiles/applications/valgrind/.version
 <!-- TAU -->
 
   for COMPILER in `ls /opt/tau`; do
