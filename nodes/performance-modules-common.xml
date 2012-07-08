@@ -44,6 +44,7 @@ fi
     cat &gt; /opt/modulefiles/applications/.$COMPILER/pdt/3.15 &lt;&lt; END
 #%Module1.0
 prepend-path PATH /opt/pdt/$COMPILER/x86_64/bin
+setenv PDT_BASE /opt/pdt/$COMPILER
 prepend-path LD_LIBRARY_PATH /opt/pdt/$COMPILER/x86_64/lib
 END
     chmod 0644 /opt/modulefiles/applications/.$COMPILER/pdt/3.15
@@ -67,6 +68,7 @@ done
   cat &gt; /opt/modulefiles/applications/.$COMPILER/mxml/2.7 &lt;&lt; END
 #%Module1.0
 prepend-path PATH /opt/mxml/$COMPILER/bin
+setenv MXML_BASE /opt/mxml/$COMPILER
 prepend-path LD_LIBRARY_PATH /opt/mxml/.$COMPILER/lib
 END
   chmod 0644  /opt/modulefiles/applications/.$COMPILER/mxml/2.7
@@ -88,6 +90,7 @@ done
   cat &gt; /opt/modulefiles/applications/.$COMPILER/papi/4.2.1  &lt;&lt; END
 #%Module1.0
 prepend-path PATH /opt/papi/$COMPILER/bin
+setenv PAPI_BASE /opt/papi/$COMPILER
 prepend-path LD_LIBRARY_PATH /opt/papi/$COMPILER/lib
 END
   chmod 0644  /opt/modulefiles/applications/.$COMPILER/papi/4.2.1
@@ -141,8 +144,14 @@ if { ! [info exists env(MPIHOME)] } {
   exit
 }
 prepend-path PATH /opt/tau/$COMPILER/\$mpiType/x86_64/bin
+setenv PAPI_BASE /opt/papi/$COMPILER
+setenv TAU_BASE /opt/tau/$COMPILER/\$mpiType
 prepend-path LD_LIBRARY_PATH /opt/tau/$COMPILER/\$mpiType/x86_64/lib
 prepend-path LD_LIBRARY_PATH /opt/papi/$COMPILER/lib
+prepend-path LD_LIBRARY_PATH /opt/pdt/$COMPILER/x86_64/lib
+prepend-path PATH /opt/papi/$COMPILER/bin
+prepend-path PATH /opt/pdt/$COMPILER/x86_64/bin
+setenv PDT_BASE /opt/pdt/$COMPILER
 END
 
    chmod 0644 /opt/modulefiles/applications/.$COMPILER/tau/2.21.3
@@ -180,7 +189,8 @@ if { ! [info exists env(MPIHOME)] } {
   exit
 }
 prepend-path PATH /opt/ipm/$COMPILER/\$mpiType/bin
-setenv IPM_BASE /opt/ipm/$COMPILER/\$mpiType
+setenv SDSC_IPM_BASE /opt/ipm/$COMPILER/\$mpiType
+setenv PAPI_BASE /opt/papi/$COMPILER
 prepend-path LD_LIBRARY_PATH /opt/ipm/$COMPILER/\$mpiType/lib
 prepend-path LD_LIBRARY_PATH /opt/mxml/$COMPILER/lib
 prepend-path LD_LIBRARY_PATH /opt/papi/$COMPILER/lib
