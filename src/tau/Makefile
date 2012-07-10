@@ -70,6 +70,12 @@ REDHAT.ROOT = $(PWD)/../../
 
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
+ifeq ("$(ROLLNETWORK)", "eth")
+  MPIMODULE = $(ROLLMPI)
+else
+  MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
+endif
+
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
@@ -120,7 +126,7 @@ install::
 	  ./installtau -prefix=$(PKGROOT) -cc=$(CCOMP) -c++=$(CPPCOMP) \
 	               -fortran=$(FORTRAN) -mpi -mpiinc=$${MPI_HOME}/include \
 	               -mpilib=$${MPI_HOME}/lib -papi=/opt/papi/$(ROLLCOMPILER) \
-                       -pdt=/opt/pdt/$(ROLLCOMPILER)  -jdk=/usr/java/latest \
+                       -pdt=/opt/pdt/$(ROLLCOMPILER) \
 	)
 	umount $(PKGROOT)
 	umount /opt/pdt/$(ROLLCOMPILER)
