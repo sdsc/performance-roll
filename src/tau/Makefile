@@ -126,7 +126,7 @@ install::
 	  ./installtau -prefix=$(PKGROOT) -cc=$(CCOMP) -c++=$(CPPCOMP) \
 	               -fortran=$(FORTRAN) -mpi -mpiinc=$${MPI_HOME}/include \
 	               -mpilib=$${MPI_HOME}/lib -papi=/opt/papi/$(ROLLCOMPILER) \
-                       -pdt=/opt/pdt/$(ROLLCOMPILER) \
+                       -pdt=/opt/pdt/$(ROLLCOMPILER); \
 	)
 	umount $(PKGROOT)
 	umount /opt/pdt/$(ROLLCOMPILER)
