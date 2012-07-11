@@ -1,3 +1,3 @@
 NAME    = valgrind
 VERSION = 3.7.0
-RELEASE = 6
+RELEASE = 7
