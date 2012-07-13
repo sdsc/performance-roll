@@ -154,7 +154,7 @@ prepend-path LD_LIBRARY_PATH /opt/pdt/$COMPILER/x86_64/lib
 prepend-path PATH /opt/papi/$COMPILER/bin
 prepend-path PATH /opt/pdt/$COMPILER/x86_64/bin
 setenv PDT_BASE /opt/pdt/$COMPILER
-if { [string match "yes" $mvapich2]} {
+if { [string match "yes" \$mvapich2]} {
 setenv TAU_LINKER_OPT17 -lmpl
 }
 END
