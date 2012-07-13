@@ -128,6 +128,7 @@ END
     /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.$COMPILER/tau
    cat &gt; /opt/modulefiles/applications/.$COMPILER/tau/2.21.3 &lt;&lt; END
 #%Module1.0
+set mvapich2 no
 if { ! [info exists env(MPIHOME)] } {
   puts stderr "Need to load an mpi module first"
   exit
@@ -137,6 +138,7 @@ if { ! [info exists env(MPIHOME)] } {
   set mpiType mpich
 } elseif { [string match "*mvapich2*" \$env(MPIHOME)] } {
   set mpiType mvapich2
+  set mvapich2 yes
 } elseif { [string match "*openmpi*" \$env(MPIHOME)] } {
   set mpiType openmpi
 } else {
@@ -152,6 +154,9 @@ prepend-path LD_LIBRARY_PATH /opt/pdt/$COMPILER/x86_64/lib
 prepend-path PATH /opt/papi/$COMPILER/bin
 prepend-path PATH /opt/pdt/$COMPILER/x86_64/bin
 setenv PDT_BASE /opt/pdt/$COMPILER
+if { [string match "yes" $mvapich2]} {
+setenv TAU_LINKER_OPT17 -lmpl
+}
 END
 
    chmod 0644 /opt/modulefiles/applications/.$COMPILER/tau/2.21.3
