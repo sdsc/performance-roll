@@ -116,7 +116,7 @@ END
 
   cat &gt; /opt/modulefiles/applications/valgrind/.version.3.7.0 &lt;&lt; END
 #%Module1.0
-set ModulesVersion "4.2.1"
+set ModulesVersion "3.7.0"
 END
   chmod 0644 /opt/modulefiles/applications/valgrind/.version.3.7.0
 
