@@ -118,6 +118,7 @@ install::
 	mkdir -p $(PKGROOT)
 	mkdir -p $(ROOT)/$(PKGROOT)
 	mount --bind $(REDHAT.ROOT)/src/build-pdt-$(ROLLCOMPILER) /opt/pdt/$(ROLLCOMPILER)
+	mount --bind $(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER) /opt/papi/$(ROLLCOMPILER)
 	mount --bind $(ROOT)/$(PKGROOT)  $(PKGROOT)
 	( \
 	  $(COMPILERSETUP); \
@@ -130,6 +131,7 @@ install::
 	)
 	umount $(PKGROOT)
 	umount /opt/pdt/$(ROLLCOMPILER)
+	umount /opt/papi/$(ROLLCOMPILER)
 
 clean::
 	rm -rf $(SOURCE)
