@@ -1,0 +1,3 @@
+NAME = pdt-modules_$(ROLLCOMPILER)
+VERSION = 3.15
+RELEASE = 11

@@ -1,0 +1,3 @@
+NAME = mxml-modules_$(ROLLCOMPILER)
+VERSION = 2.7
+RELEASE = 11

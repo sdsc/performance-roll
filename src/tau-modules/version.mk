@@ -1,0 +1,3 @@
+NAME    = tau-modules_$(ROLLCOMPILER)
+VERSION = 2.21.3
+RELEASE = 11

@@ -1,0 +1,4 @@
+#%Module1.0
+prepend-path PATH /opt/papi/ROLLCOMPILER/bin
+setenv PAPI_BASE /opt/papi/ROLLCOMPILER
+prepend-path LD_LIBRARY_PATH /opt/papi/ROLLCOMPILER/lib

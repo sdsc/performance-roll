@@ -1,0 +1,4 @@
+#%Module1.0
+prepend-path PATH /opt/pdt/ROLLCOMPILER/x86_64/bin
+setenv PDT_BASE /opt/pdt/ROLLCOMPILER
+prepend-path LD_LIBRARY_PATH /opt/pdt/ROLLCOMPILER/x86_64/lib

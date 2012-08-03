@@ -1,0 +1,22 @@
+#%Module1.0
+if { ! [info exists env(MPIHOME)] } {
+  puts stderr "Need to load an mpi module first"
+  exit
+} elseif { [string match "*mpich2*" $env(MPIHOME)] } {
+  set mpiType mpich2
+} elseif { [string match "*mpich*" $env(MPIHOME)] } {
+  set mpiType mpich
+} elseif { [string match "*mvapich2*" $env(MPIHOME)] } {
+  set mpiType mvapich2
+} elseif { [string match "*openmpi*" $env(MPIHOME)] } {
+  set mpiType openmpi
+} else {
+  puts stderr "Unknown mpi $env(MPIHOME)"
+  exit
+}
+prepend-path PATH /opt/ipm/ROLLCOMPILER/$mpiType/bin
+setenv SDSC_IPM_BASE /opt/ipm/ROLLCOMPILER/$mpiType
+setenv PAPI_BASE /opt/papi/ROLLCOMPILER
+prepend-path LD_LIBRARY_PATH /opt/ipm/ROLLCOMPILER/$mpiType/lib
+prepend-path LD_LIBRARY_PATH /opt/mxml/ROLLCOMPILER/lib
+prepend-path LD_LIBRARY_PATH /opt/papi/ROLLCOMPILER/lib

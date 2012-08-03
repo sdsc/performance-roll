@@ -1,0 +1,30 @@
+#%Module1.0
+set mvapich2 no
+if { ! [info exists env(MPIHOME)] } {
+  puts stderr "Need to load an mpi module first"
+  exit
+} elseif { [string match "*mpich2*" $env(MPIHOME)] } {
+  set mpiType mpich2
+} elseif { [string match "*mpich*" $env(MPIHOME)] } {
+  set mpiType mpich
+} elseif { [string match "*mvapich2*" $env(MPIHOME)] } {
+  set mpiType mvapich2
+  set mvapich2 yes
+} elseif { [string match "*openmpi*" $env(MPIHOME)] } {
+  set mpiType openmpi
+} else {
+  puts stderr "Unknown mpi $env(MPIHOME)"
+  exit
+}
+prepend-path PATH /opt/tau/ROLLCOMPILER/$mpiType/x86_64/bin
+setenv PAPI_BASE /opt/papi/ROLLCOMPILER
+setenv TAU_BASE /opt/tau/ROLLCOMPILER/$mpiType
+prepend-path LD_LIBRARY_PATH /opt/tau/ROLLCOMPILER/$mpiType/x86_64/lib
+prepend-path LD_LIBRARY_PATH /opt/papi/ROLLCOMPILER/lib
+prepend-path LD_LIBRARY_PATH /opt/pdt/ROLLCOMPILER/x86_64/lib
+prepend-path PATH /opt/papi/ROLLCOMPILER/bin
+prepend-path PATH /opt/pdt/ROLLCOMPILER/x86_64/bin
+setenv PDT_BASE /opt/pdt/ROLLCOMPILER
+if { [string match "yes" $mvapich2]} {
+  setenv TAU_LINKER_OPT17 -lmpl
+}

@@ -4,6 +4,18 @@
 
 <description>
 Performance tools
+IPM Integrated Performance Monitoring
+https://www.nersc.gov/users/software/debugging-and-profiling/ipm
+Mini-XML
+http://www.minixml.org
+PAPI
+http://icl.cs.utk.edu/papi/software/index.html
+PDT Program Database Toolkit
+http://www.cs.uoregon.edu/research/pdt/home.php
+TAU Portable Profiling Package
+http://www.cs.uoregon.edu/Research/tau/home.php
+Valgrind
+http://valgrind.org
 </description>
 
 <copyright>
@@ -19,17 +31,6 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 </edge>
 <order head="base">
   <tail>performance-common</tail>
-</order>
-
-<edge from="envmodules-common">
-  <to>performance-modules-common</to>
-</edge>
-<order head="performance-common">
-  <tail>performance-modules-common</tail>
-</order>
-
-<order head="performance-common">
-  <tail>performance-modules-common</tail>
 </order>
 
 </graph>

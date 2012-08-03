@@ -3,10 +3,18 @@
 <kickstart>
 
 <description>
+IPM Integrated Performance Monitoring
+https://www.nersc.gov/users/software/debugging-and-profiling/ipm
+Mini-XML
+http://www.minixml.org
+PAPI
+http://icl.cs.utk.edu/papi/software/index.html
 PDT Program Database Toolkit
 http://www.cs.uoregon.edu/research/pdt/home.php
 TAU Portable Profiling Package
-http://www.cs.uoregon.edu/research/paracomp/tau
+http://www.cs.uoregon.edu/Research/tau/home.php
+Valgrind
+http://valgrind.org
 </description>
 
 <copyright>
@@ -17,15 +25,17 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 <changelog>
 </changelog>
 
-
-<package>pdt_ROLLCOMPILER</package>
+<package>ipm_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>mxml_ROLLCOMPILER</package>
-<package>tau_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
-<package>ipm_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
 <package>papi_ROLLCOMPILER</package>
+<package>pdt_ROLLCOMPILER</package>
+<package>tau_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>valgrind</package>
-
-<post>
-</post>
+<package>ipm-modules_ROLLCOMPILER</package>
+<package>mxml-modules_ROLLCOMPILER</package>
+<package>papi-modules_ROLLCOMPILER</package>
+<package>pdt-modules_ROLLCOMPILER</package>
+<package>tau-modules_ROLLCOMPILER</package>
+<package>valgrind-modules</package>
 
 </kickstart>
