@@ -106,48 +106,34 @@ endif
 -include $(ROCKSROOT)/etc/Rules.mk
 
 build:
-	mkdir -p $(PKGROOT)
-	mkdir -p $(ROOT)/$(PKGROOT)
-	mkdir -p /opt/mxml/$(ROLLCOMPILER)
-	mkdir -p /opt/papi/$(ROLLCOMPILER)
-	mount --bind $(REDHAT.ROOT)/src/build-mxml-$(ROLLCOMPILER) /opt/mxml/$(ROLLCOMPILER); \
-	mount --bind $(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER) /opt/papi/$(ROLLCOMPILER); \
-	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT); \
 	tar zxvf $(SOURCE).tar.gz
 	cp patch-files/configure $(SOURCE)
 	( \
 	  cd $(SOURCE); \
 	  $(COMPILERSETUP); \
- 	  $(MPISETUP); \
-          export CC=$(CCOMP); \
-          export F77=$(FORTRAN); \
-          export CXX=$(CPPCOMP); \
-          export LDFLAGS=-L/opt/mxml/$(ROLLCOMPILER)/lib; \
-          export CFLAGS=-I/opt/mxml/$(ROLLCOMPILER)/include; \
-          export CXXFLAGS=-I/opt/mxml/$(ROLLCOMPILER)/include; \
-          export MPIF77=`which mpif77`; \
-          export MPICC=`which mpicc`; \
-          ./configure --prefix=$(PKGROOT) --with-papi=/opt/papi/$(ROLLCOMPILER) --enable-posixio=yes --enable-parser --disable-shared; \
-          make \
-         )
-	umount /opt/mxml/$(ROLLCOMPILER)
-	umount /opt/papi/$(ROLLCOMPILER)
-	umount $(PKGROOT)
+	  $(MPISETUP); \
+	  export MXML_HOME=$(REDHAT.ROOT)/src/build-mxml-$(ROLLCOMPILER); \
+	  export PAPI_HOME=$(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER); \
+	  export CC=$(CCOMP); \
+	  export F77=$(FORTRAN); \
+	  export CXX=$(CPPCOMP); \
+	  export LDFLAGS=-L$${MXML_HOME}/lib; \
+	  export CFLAGS=-I$${MXML_HOME}/include; \
+	  export CXXFLAGS=-I$${MXML_HOME}/include; \
+	  export MPIF77=`which mpif77`; \
+	  export MPICC=`which mpicc`; \
+	  export LD_LIBRARY_PATH=$${PAPI_HOME}/lib:$${LD_LIBRARY_PATH}; \
+	  ./configure --prefix=$(PKGROOT) --with-papi=$${PAPI_HOME} \
+	    --enable-posixio=yes --enable-parser --disable-shared; \
+	  make \
+	)
 
 install::
-	mkdir -p /opt/mxml/$(ROLLCOMPILER)
-	mkdir -p /opt/papi/$(ROLLCOMPILER)
-	mkdir -p $(PKGROOT)
-	mount --bind $(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER) /opt/papi/$(ROLLCOMPILER); \
-	mount --bind $(REDHAT.ROOT)/src/build-mxml-$(ROLLCOMPILER) /opt/mxml/$(ROLLCOMPILER); \
-	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT); \
+	mkdir -p $(ROOT)/$(PKGROOT)
 	( \
-            cd $(SOURCE); \
-	    make install; \
-        )
-	umount $(PKGROOT)
-	umount /opt/papi/$(ROLLCOMPILER)
-	umount /opt/mxml/$(ROLLCOMPILER)
+	  cd $(SOURCE); \
+	  make prefix=$(ROOT)/$(PKGROOT) install \
+	)
 
 clean::
 	rm -rf $(SOURCE)
