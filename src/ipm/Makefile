@@ -109,9 +109,9 @@ build:
 	tar zxvf $(SOURCE).tar.gz
 	cp patch-files/configure $(SOURCE)
 	( \
-	  cd $(SOURCE); \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
+	  cd $(SOURCE); \
 	  export MXML_HOME=$(REDHAT.ROOT)/src/build-mxml-$(ROLLCOMPILER); \
 	  export PAPI_HOME=$(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER); \
 	  export CC=$(CCOMP); \
@@ -131,6 +131,8 @@ build:
 install::
 	mkdir -p $(ROOT)/$(PKGROOT)
 	( \
+	  $(COMPILERSETUP); \
+	  $(MPISETUP); \
 	  cd $(SOURCE); \
 	  make prefix=$(ROOT)/$(PKGROOT) install \
 	)
