@@ -74,6 +74,7 @@ COMPILERSETUP = \
 
 CPPCOMP = g++
 CC = gcc
+COMPILE_FLAGS = -fPIC
 CONFIGURE_FLAGS =
 ifeq ("$(ROLLCOMPILER)", "intel")
   CPPCOMP = icpc
@@ -95,7 +96,7 @@ install::
 	( \
 	  $(COMPILERSETUP); \
 	  export CC=$(CCOMP); \
-	  export CFLAGS=""; \
+	  export CFLAGS="$(COMPILE_FLAGS)"; \
 	  export CXX=$(CPPCOMP); \
 	  cd $(SOURCE); \
 	  ./configure -prefix=$(PKGROOT); \
