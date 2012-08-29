@@ -104,7 +104,7 @@ install::
 	  make install \
 	)
 	umount $(PKGROOT)
-	rmdir $(PKGROOT) || true
+	rmdir -p $(PKGROOT) || true
 	cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-pdt-$(ROLLCOMPILER)
 
 clean::
