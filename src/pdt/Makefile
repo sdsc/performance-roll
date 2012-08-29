@@ -91,8 +91,7 @@ build:
 install::
 	mkdir -p $(PKGROOT)
 	mkdir -p $(ROOT)/$(PKGROOT)
-	mkdir -p $(REDHAT.ROOT)/src/build-pdt-$(ROLLCOMPILER)
-	mount --bind  $(REDHAT.ROOT)/src/build-pdt-$(ROLLCOMPILER) $(PKGROOT)
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  $(COMPILERSETUP); \
 	  export CC=$(CCOMP); \
@@ -105,7 +104,8 @@ install::
 	  make install \
 	)
 	umount $(PKGROOT)
-	cp -r $(REDHAT.ROOT)/src/build-pdt-$(ROLLCOMPILER)/* $(ROOT)/$(PKGROOT)
+	rmdir $(PKGROOT) || true
+	cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-pdt-$(ROLLCOMPILER)
 
 clean::
 	rm -rf $(SOURCE)
