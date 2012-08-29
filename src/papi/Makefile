@@ -88,26 +88,24 @@ endif
 build:
 	tar zxvf $(SOURCE).tar.gz
 	cp patch-files/pfmlib_common.c $(SOURCE)/src/libpfm4/lib
-
-install::
-	mkdir -p $(PKGROOT)
-	mkdir -p $(ROOT)/$(PKGROOT)
-	mkdir -p $(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER)
 	( \
 	  $(COMPILERSETUP); \
 	  export CC=$(CCOMP); \
 	  export CFLAGS=$${CONfIGURE_FLAGS}; \
 	  export F77=$(FCOMP); \
 	  export FFLAGS=""; \
-          echo $${CC}; \
-	  mount --bind $(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER)  $(PKGROOT); \
 	  cd $(SOURCE)/src; \
-          ./configure --prefix=$(PKGROOT) --with-libpfm4; \
-	  make; \
-	  make install; \
-          umount $(PKGROOT); \
-          cp -r $(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER)/* $(ROOT)/$(PKGROOT) \
+	  ./configure --prefix=$(PKGROOT) --with-libpfm4; \
+	  make \
 	)
+
+install::
+	mkdir -p $(ROOT)/$(PKGROOT)
+	( \
+	  cd $(SOURCE)/src; \
+	  make prefix=$(ROOT)/$(PKGROOT) install \
+	)
+	cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER)
 
 clean::
 	rm -rf $(SOURCE)
