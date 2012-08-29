@@ -117,21 +117,20 @@ build:
 install::
 	mkdir -p $(PKGROOT)
 	mkdir -p $(ROOT)/$(PKGROOT)
-	mount --bind $(REDHAT.ROOT)/src/build-pdt-$(ROLLCOMPILER) /opt/pdt/$(ROLLCOMPILER)
-	mount --bind $(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER) /opt/papi/$(ROLLCOMPILER)
-	mount --bind $(ROOT)/$(PKGROOT)  $(PKGROOT)
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
+	  export PAPI_HOME=$(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER); \
+	  export PDT_HOME=$(REDHAT.ROOT)/src/build-pdt-$(ROLLCOMPILER); \
 	  cd $(SOURCE); \
 	  ./installtau -prefix=$(PKGROOT) -cc=$(CCOMP) -c++=$(CPPCOMP) \
 	               -fortran=$(FORTRAN) -mpi -mpiinc=$${MPI_HOME}/include \
-	               -mpilib=$${MPI_HOME}/lib -papi=/opt/papi/$(ROLLCOMPILER) \
-                       -pdt=/opt/pdt/$(ROLLCOMPILER) -bfd=download; \
+	               -mpilib=$${MPI_HOME}/lib -papi=$${PAPI_HOME} \
+	               -pdt=$${PDT_HOME} -bfd=download \
 	)
 	umount $(PKGROOT)
-	umount /opt/pdt/$(ROLLCOMPILER)
-	umount /opt/papi/$(ROLLCOMPILER)
+	rmdir -p $(PKGROOT)
 
 clean::
 	rm -rf $(SOURCE)

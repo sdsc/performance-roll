@@ -87,24 +87,23 @@ endif
 
 build:
 	tar zxvf $(SOURCE).tar.gz
-
-install::
-	mkdir -p $(PKGROOT)
-	mkdir -p $(ROOT)/$(PKGROOT)
-	mkdir -p $(REDHAT.ROOT)/src/build-mxml-$(ROLLCOMPILER)
-	mount --bind  $(REDHAT.ROOT)/src/build-mxml-$(ROLLCOMPILER) $(PKGROOT)
 	( \
 	  $(COMPILERSETUP); \
 	  export CC=$(CCOMP); \
 	  export CFLAGS="$(COMPILE_FLAGS)"; \
 	  export CXX=$(CPPCOMP); \
 	  cd $(SOURCE); \
-	  ./configure -prefix=$(PKGROOT); \
-	  make; \
-	  make install \
+	  ./configure --prefix=$(PKGROOT); \
+	  make \
 	)
-	umount $(PKGROOT)
-	cp -r $(REDHAT.ROOT)/src/build-mxml-$(ROLLCOMPILER)/* $(ROOT)/$(PKGROOT)
+
+install::
+	mkdir -p $(ROOT)/$(PKGROOT)
+	( \
+	  cd $(SOURCE); \
+	  make prefix=$(ROOT)/$(PKGROOT) install \
+	)
+	cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-mxml-$(ROLLCOMPILER)
 
 clean::
 	rm -rf $(SOURCE)
