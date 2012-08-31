@@ -99,10 +99,14 @@ build:
 
 install::
 	mkdir -p $(ROOT)/$(PKGROOT)
+	mkdir -p $(PKGROOT)
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  cd $(SOURCE); \
-	  make prefix=$(ROOT)/$(PKGROOT) install \
+	  make install \
 	)
+	umount $(PKGROOT)
+	rmdir -p $(PKGROOT) || true
 	cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-mxml-$(ROLLCOMPILER)
 
 clean::
