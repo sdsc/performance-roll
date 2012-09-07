@@ -130,12 +130,15 @@ build:
 
 install::
 	mkdir -p $(ROOT)/$(PKGROOT)
+	mkdir -p $(PKGROOT)
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE); \
-	  make prefix=$(ROOT)/$(PKGROOT) install \
+	  make install \
 	)
+	-rmdir -p $(PKGROOT)
 
 clean::
 	rm -rf $(SOURCE)
