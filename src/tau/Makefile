@@ -130,7 +130,7 @@ install::
 	               -pdt=$${PDT_HOME} -bfd=download \
 	)
 	umount $(PKGROOT)
-	rmdir -p $(PKGROOT)
+	-rmdir -p $(PKGROOT)
 
 clean::
 	rm -rf $(SOURCE)
