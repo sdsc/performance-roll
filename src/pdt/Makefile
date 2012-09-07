@@ -73,7 +73,7 @@ COMPILERSETUP = \
   fi
 
 CCOMP = gcc
-FCOMP = g77
+FCOMP = gfortran
 CONFIGURE_FLAGS =
 ifeq ("$(ROLLCOMPILER)", "intel")
   CCOMP = icc
