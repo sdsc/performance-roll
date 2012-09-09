@@ -182,6 +182,9 @@ DBG?=-g -Wall
 else
 DBG?=-g -Wall -Wextra -Wno-unused-parameter
 endif
+ifeq ("$(CC)","pgcc ")
+  DBG=-g
+endif
 
 CFLAGS+=$(OPTIM) $(DBG) -I$(SYSINCDIR) -I$(PFMINCDIR)
 MKDEP=makedepend
