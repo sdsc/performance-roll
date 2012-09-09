@@ -87,14 +87,17 @@ endif
 
 build:
 	tar zxvf $(SOURCE).tar.gz
-	cp patch-files/pfmlib_common.c $(SOURCE)/src/libpfm4/lib
+	cp patch-files/configure $(SOURCE)/src/
+	cp patch-files/pfmlib_common.c $(SOURCE)/src/libpfm4/lib/
+	cp patch-files/pfmlib_perf_event_pmu.c $(SOURCE)/src/libpfm4/lib/
 	cp patch-files/libpfm4-config.mk $(SOURCE)/src/libpfm4/config.mk
 	( \
 	  $(COMPILERSETUP); \
 	  export CC=$(CCOMP); \
-	  export CFLAGS=$${CONfIGURE_FLAGS}; \
+	  export CFLAGS="$(CONFIGURE_FLAGS)"; \
 	  export F77=$(FCOMP); \
 	  export FFLAGS=""; \
+	  export LDFLAGS="$(CONFIGURE_FLAGS)"; \
 	  cd $(SOURCE)/src; \
 	  ./configure --prefix=$(PKGROOT) --with-libpfm4; \
 	  make \
