@@ -117,7 +117,7 @@ build:
 	  export CC=$(CCOMP); \
 	  export F77=$(FORTRAN); \
 	  export CXX=$(CPPCOMP); \
-	  export LDFLAGS=-L$${MXML_HOME}/lib; \
+	  export LDFLAGS="-L$${MXML_HOME}/lib -lpthread"; \
 	  export CFLAGS=-I$${MXML_HOME}/include; \
 	  export CXXFLAGS=-I$${MXML_HOME}/include; \
 	  export MPIF77=`which mpif77`; \
