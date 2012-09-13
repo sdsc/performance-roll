@@ -138,6 +138,7 @@ install::
 	  cd $(SOURCE); \
 	  make install \
 	)
+	umount $(PKGROOT)
 	-rmdir -p $(PKGROOT)
 
 clean::
