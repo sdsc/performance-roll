@@ -1,4 +1,4 @@
-ROLLNAME = performance$(ROLLSUFFIX)
+ROLLNAME = performance
 RELEASE  = 11
 COLOR    = orange
 

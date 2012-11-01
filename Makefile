@@ -64,9 +64,6 @@ endif
 ifndef ROLLNETWORK
   ROLLNETWORK = eth
 endif
-empty:=
-space:=$(empty) $(empty)
-ROLLSUFFIX = _$(subst $(space),+,$(ROLLCOMPILER))_$(subst $(space),+,$(ROLLMPI))_$(subst $(space),+,$(ROLLNETWORK))
 
 -include $(ROLLSROOT)/etc/Rolls.mk
 
