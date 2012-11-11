@@ -1,4 +1,5 @@
 #%Module1.0
+setenv MXMLHOME /opt/mxml/ROLLCOMPILER
 prepend-path PATH /opt/mxml/ROLLCOMPILER/bin
 setenv MXML_BASE /opt/mxml/ROLLCOMPILER
 prepend-path LD_LIBRARY_PATH /opt/mxml/.ROLLCOMPILER/lib
