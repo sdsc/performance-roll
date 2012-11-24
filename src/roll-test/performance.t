@@ -25,21 +25,43 @@ foreach my $package(@packages) {
 
 # ipm
 my $packageHome = '/opt/ipm';
-
+my $testDir = "$packageHome/test";
 SKIP: {
 
-  skip 'ipm not installed', 1 if ! -d $packageHome;
-  fail('Need to write ipm test');
-  open(OUT, ">$TESTFILE.sh");
+  skip 'ipm not installed', 2 if ! -d $packageHome;
+
+  open(OUT, ">$TESTFILE-ipm.c");
+  print OUT <<END;
+#include <stdio.h>
+#include <mpi.h>
+
+int main (int argc, char **argv) {
+  int rank, size;
+  MPI_Init(&argc, &argv);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  printf("Hello from process %d of %d\\n", rank, size);
+  MPI_Finalize();
+  return 0;
+}
+END
+close(OUT);
+
+  open(OUT, ">$TESTFILE-ipm.sh");
   print OUT <<END;
 if test -f /etc/profile.d/modules.sh; then
   . /etc/profile.d/modules.sh
-  module load ROLLCOMPILER ROLLMPI_ROLLNETWORK ipm
+  module load ROLLCOMPILER ROLLMPI_ROLLNETWORK ipm papi
 fi
+mkdir $TESTFILE-ipm.dir
+cd $TESTFILE-ipm.dir
+mpicc ../$TESTFILE-ipm.c -L\$IPMHOME/lib -lipm -L\$PAPIHOME/lib -lpapi
+mpirun -np 4 ./a.out
 END
   close(OUT);
-  $output = `/bin/bash $TESTFILE.sh 2>&1`;
-  ok($output =~ /./, 'ipm sample run');
+  $output = `/bin/bash $TESTFILE-ipm.sh 2>&1`;
+  like($output, qr/process 3/, 'ipm sample run');
+  like($output, qr/wallclock\s*:\s*\d+/, 'ipm sample output');
 
 }
 
@@ -224,4 +246,4 @@ SKIP: {
 
 }
 
-#`rm -fr $TESTFILE*`;
+`rm -fr $TESTFILE*`;
