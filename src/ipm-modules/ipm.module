@@ -14,7 +14,7 @@ if { ! [info exists env(MPIHOME)] } {
   puts stderr "Unknown mpi $env(MPIHOME)"
   exit
 }
-setenv IPMHOME /opt/ipm/ROLLCOMPILER
+setenv IPMHOME /opt/ipm/ROLLCOMPILER/$mpiType
 prepend-path PATH /opt/ipm/ROLLCOMPILER/$mpiType/bin
 setenv SDSC_IPM_BASE /opt/ipm/ROLLCOMPILER/$mpiType
 setenv PAPI_BASE /opt/papi/ROLLCOMPILER
