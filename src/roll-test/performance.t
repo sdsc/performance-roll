@@ -25,7 +25,7 @@ foreach my $package(@packages) {
 
 # ipm
 my $packageHome = '/opt/ipm';
-my $testDir = "$packageHome/test";
+
 SKIP: {
 
   skip 'ipm not installed', 1 if ! -d $packageHome;
@@ -38,7 +38,7 @@ if test -f /etc/profile.d/modules.sh; then
 fi
 END
   close(OUT);
-  $output = `/bin/bash $TESTFILE.sh`;
+  $output = `/bin/bash $TESTFILE.sh 2>&1`;
   ok($output =~ /./, 'ipm sample run');
 
 }
@@ -82,7 +82,7 @@ $compilers{"ROLLCOMPILER"} -I\$MXML_BASE/include -o $TESTFILE-mxml.exe $TESTFILE
 ./$TESTFILE-mxml.exe
 END
   close(OUT);
-  $output = `/bin/bash $TESTFILE-mxml.sh`;
+  $output = `/bin/bash $TESTFILE-mxml.sh 2>&1`;
   ok($output =~ /node count is 3/, 'mxml sample run');
 
 }
@@ -147,7 +147,7 @@ fi
 END
 
   close(OUT);
-  $output = `/bin/bash $TESTFILE.sh`;
+  $output = `/bin/bash $TESTFILE.sh 2>&1`;
   ok($output =~ /MFLOPS:\s*\d+/, 'papi sample run');
 
 }
@@ -178,28 +178,33 @@ cparse $TESTFILE-pdt.c
 cat $TESTFILE-pdt.pdb
 END
   close(OUT);
-  $output = `/bin/bash $TESTFILE-pdt.sh`;
+  $output = `/bin/bash $TESTFILE-pdt.sh 2>&1`;
   ok($output =~ /stdout/, 'pdt sample run');
 
 }
 
 # tau
 $packageHome = '/opt/tau';
-$testDir = "$packageHome/test";
 SKIP: {
 
   skip 'tau not installed', 1 if ! -d $packageHome;
-  fail('Need to write tau test');
+
   open(OUT, ">$TESTFILE.sh");
   print OUT <<END;
 if test -f /etc/profile.d/modules.sh; then
   . /etc/profile.d/modules.sh
-  module load ROLLCOMPILER ROLLMPI_ROLLNETWORK tau
+  module load ROLLCOMPILER ROLLMPI_ROLLNETWORK pdt tau
 fi
+mkdir $TESTFILE-tau.dir
+cd $TESTFILE-tau.dir
+cp -r \$TAU_BASE/examples/taucompiler/c/* .
+export TAU_MAKEFILE=`ls \$TAU_BASE/x86_64/lib/Makefile.tau-*-mpi-pdt | grep 'tau-[a-z]*-mpi'`
+make
+mpirun -np 4 ring
 END
   close(OUT);
-  $output = `/bin/bash $TESTFILE.sh`;
-  ok($output =~ /./, 'tau sample run');
+  $output = `/bin/bash $TESTFILE.sh 2>&1`;
+  ok($output =~ /3 done/, 'tau sample run');
 
 }
 
