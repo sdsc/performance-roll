@@ -13,8 +13,6 @@ PDT Program Database Toolkit
 http://www.cs.uoregon.edu/research/pdt/home.php
 TAU Portable Profiling Package
 http://www.cs.uoregon.edu/Research/tau/home.php
-Valgrind
-http://valgrind.org
 </description>
 
 <copyright>
@@ -30,12 +28,10 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 <package>papi_ROLLCOMPILER</package>
 <package>pdt_ROLLCOMPILER</package>
 <package>tau_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
-<package>valgrind</package>
 <package>ipm-modules_ROLLCOMPILER</package>
 <package>mxml-modules_ROLLCOMPILER</package>
 <package>papi-modules_ROLLCOMPILER</package>
 <package>pdt-modules_ROLLCOMPILER</package>
 <package>tau-modules_ROLLCOMPILER</package>
-<package>valgrind-modules</package>
 
 </kickstart>
