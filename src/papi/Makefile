@@ -87,8 +87,6 @@ endif
 
 build:
 	tar zxvf $(SOURCE).tar.gz
-	cp patch-files/pfmlib_common.c $(SOURCE)/src/libpfm4/lib/
-	cp patch-files/libpfm4-config.mk $(SOURCE)/src/libpfm4/config.mk
 	( \
 	  $(COMPILERSETUP); \
 	  export CC=$(CCOMP); \
