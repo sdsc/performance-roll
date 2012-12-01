@@ -86,7 +86,7 @@ else ifeq ("$(ROLLCOMPILER)", "pgi")
 endif
 
 build:
-	tar zxvf $(SOURCE).tar.gz
+	tar zxvf $(SOURCE).tgz
 
 install::
 	mkdir -p $(PKGROOT)
