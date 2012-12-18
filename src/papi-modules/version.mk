@@ -1,3 +1,3 @@
 NAME	= papi-modules_$(ROLLCOMPILER)
-VERSION = 4.4
+VERSION = 5.0.1
 RELEASE = 1
