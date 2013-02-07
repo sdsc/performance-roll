@@ -33,5 +33,6 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 <package>papi-modules_ROLLCOMPILER</package>
 <package>pdt-modules_ROLLCOMPILER</package>
 <package>tau-modules_ROLLCOMPILER</package>
+<package>performance-roll-test</package>
 
 </kickstart>
