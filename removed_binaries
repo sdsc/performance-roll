@@ -1,0 +1,17 @@
+545513     f621388c9d49202bdf5764d7ef20fc76b36e2e97  src/ipm/ipm-2.0.0.tar.gz
+
+262027     e247c770197ba8a6b74d953c02226e4b60dd498e  src/mxml/mxml-2.7.tar.gz
+
+4323980    5014f3d413989b1c9fe1b174b6db78183fb7739e  src/papi/papi-4.2.1.tar.gz
+4329210    1f1be7e524c6f3aa53a0b2555451471aeeb56feb  src/papi/papi-4.4.0.tar.gz
+3743424    7348bd6cd9d64d669482bd4f7de40f4c6b120a4a  src/papi/papi-5.0.1.tar.gz
+
+41109245   07ea0f154fc16a9e014f5dcee25c587c25ff5ae7  src/pdt/pdtoolkit-3.15.tar.gz
+184526609  df48a8e165bd119374bc0e8ff9f6d4bf164278c0  src/pdt/pdtoolkit-3.18.1.tgz
+177787066  409347dca9103a5842d52b9c2a8424638848520f  src/pdt/pdtoolkit-3.18.tar.gz
+
+18084369   554f5e7b2dae46a6347bb9b30f8c9d4b8a30050c  src/tau/tau-2.19.tar.gz
+60233656   ccb384f9f28bc493ef0186593d6f0daf4fe22456  src/tau/tau-2.21.3.tar.gz
+46217254   b689e65e0bcbba3025b160c9175e4da5f49f4c24  src/tau/tau-2.22.p1.tar.gz
+
+8481712    24d5a510c1dc3c8dec4bdb61c7e5854c65d5b1a8  src/valgrind/valgrind-3.7.0.tgz
