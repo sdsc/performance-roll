@@ -2,6 +2,7 @@ NAME               = papi_$(ROLLCOMPILER)
 VERSION            = 5.0.1
 RELEASE            = 0
 PKGROOT            = /opt/papi/$(ROLLCOMPILER)
+RPM.EXTRAS         = AutoReq:No
 
 SRC_SUBDIR         = papi
 

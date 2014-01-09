@@ -1,6 +1,7 @@
 NAME               = tau_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION            = 2.22.p1
 RELEASE            = 0
+RPM.EXTRAS         = AutoReq:No
 PKGROOT            = /opt/tau/$(ROLLCOMPILER)/$(ROLLMPI)
 
 SRC_SUBDIR         = tau

@@ -1,6 +1,7 @@
 NAME               = pdt_$(ROLLCOMPILER)
 VERSION            = 3.18.1
 RELEASE            = 0
+RPM.EXTRAS         = AutoReq:No
 PKGROOT            = /opt/pdt/$(ROLLCOMPILER)
 
 SRC_SUBDIR         = pdt

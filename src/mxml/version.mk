@@ -1,7 +1,8 @@
 NAME               = mxml_$(ROLLCOMPILER)
 VERSION            = 2.7
-RELEASE            = 11
+RELEASE            = 0
 PKGROOT            = /opt/mxml/$(ROLLCOMPILER)
+RPM.EXTRAS         = AutoReq:No
 
 SRC_SUBDIR         = mxml
 

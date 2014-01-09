@@ -1,7 +1,8 @@
 NAME               = ipm_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION            = 2.0.0
-RELEASE            = 11
+RELEASE            = 0
 PKGROOT            = /opt/ipm/$(ROLLCOMPILER)/$(ROLLMPI)
+RPM.EXTRAS         = AutoReq:No
 
 SRC_SUBDIR         = ipm
 
