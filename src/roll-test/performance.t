@@ -222,7 +222,7 @@ cd $TESTFILE-tau.dir
 cp -r \$TAU_BASE/examples/taucompiler/c/* .
 export TAU_MAKEFILE=`ls \$TAU_BASE/x86_64/lib/Makefile.tau-*-mpi-pdt | grep 'tau-[a-z]*-mpi'`
 make
-mpirun -np 4 ring
+mpirun -np 4 ./ring
 END
   close(OUT);
   $output = `/bin/bash $TESTFILE.sh 2>&1`;
