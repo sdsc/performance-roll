@@ -1,5 +1,5 @@
 NAME               = mxml_$(ROLLCOMPILER)
-VERSION            = 2.7
+VERSION            = 2.8
 RELEASE            = 0
 PKGROOT            = /opt/mxml/$(ROLLCOMPILER)
 RPM.EXTRAS         = AutoReq:No
