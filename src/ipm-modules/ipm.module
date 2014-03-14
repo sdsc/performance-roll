@@ -14,10 +14,10 @@ if { ! [info exists env(MPIHOME)] } {
   puts stderr "Unknown mpi $env(MPIHOME)"
   exit
 }
-setenv IPMHOME /opt/ipm/ROLLCOMPILER/$mpiType
-prepend-path PATH /opt/ipm/ROLLCOMPILER/$mpiType/bin
-setenv SDSC_IPM_BASE /opt/ipm/ROLLCOMPILER/$mpiType
+setenv IPMHOME /opt/ipm/ROLLCOMPILER/$mpiType/ROLLNETWORK
+prepend-path PATH /opt/ipm/ROLLCOMPILER/$mpiType/ROLLNETWORK/bin
+setenv SDSC_IPM_BASE /opt/ipm/ROLLCOMPILER/$mpiType/ROLLNETWORK
 setenv PAPI_BASE /opt/papi/ROLLCOMPILER
-prepend-path LD_LIBRARY_PATH /opt/ipm/ROLLCOMPILER/$mpiType/lib
+prepend-path LD_LIBRARY_PATH /opt/ipm/ROLLCOMPILER/$mpiType/ROLLNETWORK/lib
 prepend-path LD_LIBRARY_PATH /opt/mxml/ROLLCOMPILER/lib
 prepend-path LD_LIBRARY_PATH /opt/papi/ROLLCOMPILER/lib

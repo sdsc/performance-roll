@@ -16,11 +16,11 @@ if { ! [info exists env(MPIHOME)] } {
   puts stderr "Unknown mpi $env(MPIHOME)"
   exit
 }
-prepend-path PATH /opt/tau/ROLLCOMPILER/$mpiType/x86_64/bin
+prepend-path PATH /opt/tau/ROLLCOMPILER/$mpiType/ROLLNETWORK/x86_64/bin
 setenv PAPI_BASE /opt/papi/ROLLCOMPILER
-setenv TAU_BASE /opt/tau/ROLLCOMPILER/$mpiType
-setenv TAUHOME /opt/tau/ROLLCOMPILER/$mpiType
-prepend-path LD_LIBRARY_PATH /opt/tau/ROLLCOMPILER/$mpiType/x86_64/lib
+setenv TAU_BASE /opt/tau/ROLLCOMPILER/$mpiType/ROLLNETWORK
+setenv TAUHOME /opt/tau/ROLLCOMPILER/$mpiType/ROLLNETWORK
+prepend-path LD_LIBRARY_PATH /opt/tau/ROLLCOMPILER/$mpiType/ROLLNETWORK/x86_64/lib
 prepend-path LD_LIBRARY_PATH /opt/papi/ROLLCOMPILER/lib
 prepend-path LD_LIBRARY_PATH /opt/pdt/ROLLCOMPILER/x86_64/lib
 prepend-path PATH /opt/papi/ROLLCOMPILER/bin

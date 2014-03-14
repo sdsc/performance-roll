@@ -9,7 +9,10 @@ use Test::More qw(no_plan);
 my $appliance = $#ARGV >= 0 ? $ARGV[0] :
                 -d '/export/rocks/install' ? 'Frontend' : 'Compute';
 my $installedOnAppliancesPattern = '.';
-my %compilers = ('gnu' => 'gcc', 'intel' => 'icc', 'pgi' => 'pgcc');
+my @COMPILERS = split(/\s+/, 'ROLLCOMPILER');
+my @MPIS = split(/\s+/, 'ROLLMPI');
+my @NETWORKS = split(/\s+/, 'ROLLNETWORK');
+my %CC = ('gnu' => 'gcc', 'intel' => 'icc', 'pgi' => 'pgcc');
 my @packages = ('ipm', 'mxml', 'papi', 'pdt', 'tau');
 my $output;
 my $TESTFILE = 'tmpperformance';
@@ -46,12 +49,15 @@ int main (int argc, char **argv) {
 }
 END
 close(OUT);
+foreach my $compiler (@COMPILERS) {
+  foreach my $mpi (@MPIS) {
+      foreach my $network (@NETWORKS) {
 
-  open(OUT, ">$TESTFILE-ipm.sh");
-  print OUT <<END;
+         open(OUT, ">$TESTFILE-ipm.sh");
+         print OUT <<END;
 if test -f /etc/profile.d/modules.sh; then
   . /etc/profile.d/modules.sh
-  module load ROLLCOMPILER ROLLMPI_ROLLNETWORK ipm papi
+  module load $compiler ${mpi}_${network} ipm papi
 fi
 mkdir $TESTFILE-ipm.dir
 cd $TESTFILE-ipm.dir
@@ -60,8 +66,12 @@ mpirun -np 4 ./a.out
 END
   close(OUT);
   $output = `/bin/bash $TESTFILE-ipm.sh 2>&1`;
-  like($output, qr/process 3/, 'ipm sample run');
+  like($output, qr/process 3/, "ipm sample run with $compiler ${mpi}_${network}");
   like($output, qr/wallclock\s*:\s*\d+/, 'ipm sample output');
+  `rm -rf $TESTFILE-ipm.dir $TESTFILE-ipm.sh`;
+  }
+  }
+}
 
 }
 
@@ -94,18 +104,21 @@ int main(int argc, char **argv) {
 END
 close(OUT);
 
+foreach my $compiler (@COMPILERS) {
   open(OUT, ">$TESTFILE-mxml.sh");
   print OUT <<END;
 if test -f /etc/profile.d/modules.sh; then
   . /etc/profile.d/modules.sh
-  module load ROLLCOMPILER ROLLMPI_ROLLNETWORK mxml
+  module load $compiler mxml;
 fi
-$compilers{"ROLLCOMPILER"} -I\$MXML_BASE/include -o $TESTFILE-mxml.exe $TESTFILE-mxml.c -L\$MXML_BASE/lib -lmxml -lpthread
+$CC{$compiler} -I\$MXML_BASE/include -o $TESTFILE-mxml.exe $TESTFILE-mxml.c -L\$MXML_BASE/lib -lmxml -lpthread
 ./$TESTFILE-mxml.exe
 END
   close(OUT);
   $output = `/bin/bash $TESTFILE-mxml.sh 2>&1`;
-  ok($output =~ /node count is 3/, 'mxml sample run');
+  ok($output =~ /node count is 3/, "mxml sample run for the $compiler compiler");
+  `rm -f $TESTFILE-mxml.exe $TESTFILE-mxml.sh`;
+}
 
 }
 
@@ -158,19 +171,22 @@ int main(int argc, char **argv) {
 END
 close(OUT);
 
+foreach my $compiler (@COMPILERS) {
   open(OUT, ">$TESTFILE.sh");
   print OUT <<END;
 if test -f /etc/profile.d/modules.sh; then
   . /etc/profile.d/modules.sh
-  module load ROLLCOMPILER ROLLMPI_ROLLNETWORK papi
+  module load $compiler papi
 fi
-  $compilers{"ROLLCOMPILER"} -I\$PAPIHOME/include -o $TESTFILE-papi.exe $TESTFILE-papi.c -L\$PAPIHOME/lib -lpapi
+  $CC{$compiler} -I\$PAPIHOME/include -o $TESTFILE-papi.exe $TESTFILE-papi.c -L\$PAPIHOME/lib -lpapi
   ./$TESTFILE-papi.exe
 END
 
   close(OUT);
   $output = `/bin/bash $TESTFILE.sh 2>&1`;
-  ok($output =~ /MFLOPS:\s*\d+/, 'papi sample run');
+  ok($output =~ /MFLOPS:\s*\d+/, "papi sample run for the $compiler compiler");
+  `rm -f $TESTFILE-papi.exe $TESTFILE.sh`;
+}
 
 }
 
@@ -190,19 +206,21 @@ int main(int argc, char **argv) {
 END
 close(OUT);
 
+foreach my $compiler (@COMPILERS) {
   open(OUT, ">$TESTFILE-pdt.sh");
   print OUT <<END;
 if test -f /etc/profile.d/modules.sh; then
   . /etc/profile.d/modules.sh
-  module load ROLLCOMPILER ROLLMPI_ROLLNETWORK pdt
+  module load $compiler pdt
 fi
 cparse $TESTFILE-pdt.c
 cat $TESTFILE-pdt.pdb
 END
   close(OUT);
   $output = `/bin/bash $TESTFILE-pdt.sh 2>&1`;
-  ok($output =~ /stdout/, 'pdt sample run');
-
+  ok($output =~ /stdout/, "pdt sample run for the $compiler compiler");
+  `rm -f $TESTFILE-pdt.pdb`;
+}
 }
 
 # tau
@@ -211,11 +229,14 @@ SKIP: {
 
   skip 'tau not installed', 1 if ! -d $packageHome;
 
-  open(OUT, ">$TESTFILE.sh");
+foreach my $compiler (@COMPILERS) {
+  foreach my $mpi (@MPIS) {
+      foreach my $network (@NETWORKS) {
+  open(OUT, ">$TESTFILE-tau.sh");
   print OUT <<END;
 if test -f /etc/profile.d/modules.sh; then
   . /etc/profile.d/modules.sh
-  module load ROLLCOMPILER ROLLMPI_ROLLNETWORK pdt tau
+  module load $compiler ${mpi}_${network} pdt tau
 fi
 mkdir $TESTFILE-tau.dir
 cd $TESTFILE-tau.dir
@@ -225,8 +246,12 @@ make
 mpirun -np 4 ./ring
 END
   close(OUT);
-  $output = `/bin/bash $TESTFILE.sh 2>&1`;
-  ok($output =~ /3 done/, 'tau sample run');
+  $output = `/bin/bash $TESTFILE-tau.sh 2>&1`;
+  ok($output =~ /3 done/, "tau sample run with $compiler ${mpi}_${network} ");
+  `rm -rf $TESTFILE-tau.dir $TESTFILE-tau.sh`;
+}
+}
+}
 
 }
 
@@ -236,14 +261,15 @@ SKIP: {
     if $appliance !~ /$installedOnAppliancesPattern/;
   skip 'modules not installed', 1 if ! -f '/etc/profile.d/modules.sh';
   foreach my $package(@packages) {
-    `/bin/ls /opt/modulefiles/applications/.ROLLCOMPILER/$package/[0-9]* 2>&1`;
-    ok($? == 0, "$package module installed");
-    `/bin/ls /opt/modulefiles/applications/.ROLLCOMPILER/$package/.version.[0-9]* 2>&1`;
-    ok($? == 0, "$package version module installed");
-    ok(-l "/opt/modulefiles/applications/.ROLLCOMPILER/$package/.version",
-       "$package version module link created");
+     foreach my $compiler (@COMPILERS) {
+       `/bin/ls /opt/modulefiles/applications/.${compiler}/$package/[0-9]* 2>&1`;
+       ok($? == 0, "$package module installed for the $compiler compiler");
+       `/bin/ls /opt/modulefiles/applications/.${compiler}/$package/.version.[0-9]* 2>&1`;
+       ok($? == 0, "$package version module installed for the $compiler compiler");
+       ok(-l "/opt/modulefiles/applications/.${compiler}/$package/.version",
+       "$package version module link created for the $compiler compiler");
+     }
   }
-
 }
 
 `rm -fr $TESTFILE*`;

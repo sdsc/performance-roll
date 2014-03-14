@@ -95,6 +95,7 @@ build: $(SRC_DIRS)
 	  export FFLAGS=""; \
 	  export LDFLAGS="$(CONFIGURE_FLAGS)"; \
 	  cd $(SOURCE_DIR)/src; \
+          export MPICC=/opt/openmpi/$(ROLLCOMPILER)/ib/bin/mpicc; \
 	  ./configure --prefix=$(PKGROOT) --with-libpfm4; \
 	  $(MAKE) \
 	)
