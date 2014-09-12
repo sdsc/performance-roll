@@ -241,7 +241,7 @@ fi
 mkdir $TESTFILE-tau.dir
 cd $TESTFILE-tau.dir
 cp -r \$TAU_BASE/examples/taucompiler/c/* .
-export TAU_MAKEFILE=`ls \$TAU_BASE/x86_64/lib/Makefile.tau-*-mpi-pdt | grep 'tau-[a-z]*-mpi'`
+export TAU_MAKEFILE=\$TAU_BASE/x86_64/lib/Makefile.tau-papi-mpi-pdt
 make
 mpirun -np 4 ./ring
 END
