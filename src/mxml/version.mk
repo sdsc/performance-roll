@@ -1,15 +1,21 @@
-NAME               = mxml_$(ROLLCOMPILER)
-VERSION            = 2.8
-RELEASE            = 0
-PKGROOT            = /opt/mxml/$(ROLLCOMPILER)
-RPM.EXTRAS         = AutoReq:No
+ifndef ROLLCOMPILER
+  ROLLCOMPILER = gnu
+endif
+COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
-SRC_SUBDIR         = mxml
+NAME           = mxml_$(COMPILERNAME)
+VERSION        = 2.8
+RELEASE        = 0
+PKGROOT        = /opt/mxml/$(COMPILERNAME)
 
-SOURCE_NAME        = mxml
-SOURCE_VERSION     = $(VERSION)
-SOURCE_SUFFIX      = tar.gz
-SOURCE_PKG         = $(SOURCE_NAME)-$(SOURCE_VERSION).$(SOURCE_SUFFIX)
-SOURCE_DIR         = $(SOURCE_PKG:%.$(SOURCE_SUFFIX)=%)
+SRC_SUBDIR     = mxml
 
-TAR_GZ_PKGS        = $(SOURCE_PKG)
+SOURCE_NAME    = mxml
+SOURCE_SUFFIX  = tar.gz
+SOURCE_VERSION = $(VERSION)
+SOURCE_PKG     = $(SOURCE_NAME)-$(SOURCE_VERSION).$(SOURCE_SUFFIX)
+SOURCE_DIR     = $(SOURCE_PKG:%.$(SOURCE_SUFFIX)=%)
+
+TAR_GZ_PKGS    = $(SOURCE_PKG)
+
+RPM.EXTRAS     = AutoReq:No

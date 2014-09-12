@@ -1,15 +1,29 @@
-NAME               = tau_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
-VERSION            = 2.23
-RELEASE            = 0
-RPM.EXTRAS         = AutoReq:No
-PKGROOT            = /opt/tau/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
+ifndef ROLLCOMPILER
+  ROLLCOMPILER = gnu
+endif
+COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
-SRC_SUBDIR         = tau
+ifndef ROLLNETWORK
+  ROLLNETWORK = eth
+endif
 
-SOURCE_NAME        = tau
-SOURCE_VERSION     = $(VERSION)
-SOURCE_SUFFIX      = tgz
-SOURCE_PKG         = $(SOURCE_NAME)-$(SOURCE_VERSION).$(SOURCE_SUFFIX)
-SOURCE_DIR         = $(SOURCE_PKG:%.$(SOURCE_SUFFIX)=%)
+ifndef ROLLMPI
+  ROLLMPI = openmpi
+endif
 
-TGZ_PKGS           = $(SOURCE_PKG)
+NAME           = tau_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
+VERSION        = 2.23
+RELEASE        = 0
+PKGROOT        = /opt/tau/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
+
+SRC_SUBDIR     = tau
+
+SOURCE_NAME    = tau
+SOURCE_SUFFIX  = tgz
+SOURCE_VERSION = $(VERSION)
+SOURCE_PKG     = $(SOURCE_NAME)-$(SOURCE_VERSION).$(SOURCE_SUFFIX)
+SOURCE_DIR     = $(SOURCE_PKG:%.$(SOURCE_SUFFIX)=%)
+
+TGZ_PKGS       = $(SOURCE_PKG)
+
+RPM.EXTRAS     = AutoReq:No
