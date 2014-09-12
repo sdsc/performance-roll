@@ -56,10 +56,6 @@
 #
 # $Log$
 
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
-
 REDHAT.ROOT = $(CURDIR)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
@@ -67,31 +63,33 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 include Rules.mk
 include pull.mk
 
+CC = gcc
+CXX = g++
+COMPILE_FLAGS = -fPIC
+ifeq ("$(COMPILERNAME)", "intel")
+  CC = icc
+  CXX = icpc
+else ifeq ("$(COMPILERNAME)", "pgi")
+  CC = pgcc
+  CXX = pgCC
+endif
+
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module load $(ROLLCOMPILER); \
-  fi
+    module load $(ROLLCOMPILER) || true; \
+  fi; \
+  echo === Compiler and version ===; \
+  $(CC) --version
 
-CPPCOMP = g++
-CC = gcc
-COMPILE_FLAGS = -fPIC
-CONFIGURE_FLAGS =
-ifeq ("$(ROLLCOMPILER)", "intel")
-  CPPCOMP = icpc
-  CCOMP = icc
-  CONFIGURE_FLAGS = -gcc
-else ifeq ("$(ROLLCOMPILER)", "pgi")
-  CPPCOMP = pgCC
-  CCOMP = pgcc
-endif
+MXML_CACHE = $(REDHAT.ROOT)/src/build-mxml-$(COMPILERNAME)
 
 build: $(SRC_DIRS)
 	( \
 	  $(COMPILERSETUP); \
-	  export CC=$(CCOMP); \
+	  export CC=$(CC); \
 	  export CFLAGS="$(COMPILE_FLAGS)"; \
-	  export CXX=$(CPPCOMP); \
+	  export CXX=$(CXX); \
 	  cd $(SOURCE_DIR); \
 	  ./configure --prefix=$(PKGROOT); \
 	  make \
@@ -99,16 +97,19 @@ build: $(SRC_DIRS)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
-	mkdir -p $(ROOT)/$(PKGROOT)
-	mkdir -p $(PKGROOT)
+        # Using a bind mount appears to be the only way to prevent the build
+        # from incorporating $(ROOT) in binary files.
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
+	-mkdir -p -m 755 $(PKGROOT)
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  cd $(SOURCE_DIR); \
-	  $(MAKE) install \
+	  $(MAKE) prefix=$(ROOT)/$(PKGROOT) install \
 	)
 	umount $(PKGROOT)
-	rmdir -p $(PKGROOT) || true
-	cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-mxml-$(ROLLCOMPILER)
+	-rmdir -p $(PKGROOT)
+	mkdir -p -m 755 $(MXML_CACHE)
+	cp -r $(ROOT)/$(PKGROOT)/* $(MXML_CACHE)/
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::

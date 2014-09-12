@@ -56,10 +56,6 @@
 #
 # $Log$
 
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
-
 REDHAT.ROOT = $(CURDIR)/../../
 
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
@@ -68,37 +64,45 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 include Rules.mk
 include pull.mk
 
+CC = gcc
+F77 = gfortran
+CONFIGURE_FLAGS =
+ifeq ("$(COMPILERNAME)", "intel")
+  CC = icc
+  F77 = ifort
+  CONFIGURE_FLAGS = -icpc
+else ifeq ("$(COMPILERNAME)", "pgi")
+  CC = pgcc
+  F77 = pgf77
+  CONFIGURE_FLAGS = -pgCC
+endif
+
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module load $(ROLLCOMPILER); \
-  fi
+    module load $(ROLLCOMPILER) || true; \
+  fi; \
+  echo === Compiler and version ===; \
+  $(CC) --version
 
-CCOMP = gcc
-FCOMP = gfortran
-CONFIGURE_FLAGS =
-ifeq ("$(ROLLCOMPILER)", "intel")
-  CCOMP = icc
-  FCOMP = ifort
-  CONFIGURE_FLAGS = -icpc
-else ifeq ("$(ROLLCOMPILER)", "pgi")
-  CCOMP = pgcc
-  FCOMP = pgf77
-  CONFIGURE_FLAGS = -pgCC
-endif
+PDT_CACHE = $(REDHAT.ROOT)/src/build-pdt-$(ROLLCOMPILER)
 
 build: $(SRC_DIRS)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
-	mkdir -p $(PKGROOT)
+        # Using a bind mount appears to be the only way to prevent the build
+        # from incorporating $(ROOT) in binary files.  Also, the configure
+	# script apparently creates installation subdirs, which is why the
+	# build target is empty and all steps are part of install
 	mkdir -p $(ROOT)/$(PKGROOT)
+	-mkdir -p $(PKGROOT)
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  $(COMPILERSETUP); \
-	  export CC=$(CCOMP); \
+	  export CC=$(CC); \
 	  export CFLAGS=""; \
-	  export F77=$(FCOMP); \
+	  export F77=$(F77); \
 	  export FFLAGS=""; \
 	  cd $(SOURCE_DIR); \
 	  ./configure -prefix=$(PKGROOT) $(CONFIGURE_FLAGS); \
@@ -106,8 +110,9 @@ install::
 	  make install \
 	)
 	umount $(PKGROOT)
-	rmdir -p $(PKGROOT) || true
-	cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-pdt-$(ROLLCOMPILER)
+	-rmdir -p $(PKGROOT)
+	mkdir -p -m 755 $(PDT_CACHE)
+	cp -r $(ROOT)/$(PKGROOT)/* $(PDT_CACHE)/
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::

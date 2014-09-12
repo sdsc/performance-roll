@@ -56,60 +56,54 @@
 #
 # $Log$
 
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-ifndef ROLLMPI
-  ROLLMPI = openmpi
-endif
-
 REDHAT.ROOT = $(CURDIR)/../../
 
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
 include pull.mk
 
+CC = gcc
+CXX = g++
+F77 = gfortran
+ifeq ("$(ROLLCOMPILER)", "intel")
+  CC = icc
+  CXX = icpc
+  F77 = ifort
+else ifeq ("$(ROLLCOMPILER)", "pgi")
+  CC = pgcc
+  CXX = pgCC
+  F77 = pgf77
+endif
+
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module load $(ROLLCOMPILER); \
-  fi
+    module load $(ROLLCOMPILER) || true; \
+  fi; \
+  echo === Compiler and version ===; \
+  $(CC) --version
 
 ifeq ("$(ROLLNETWORK)", "eth")
   MPIMODULE = $(ROLLMPI)
 else
   MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
 endif
+
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module load $(MPIMODULE); \
+    module load $(MPIMODULE) || true; \
   fi; \
-  export MPI_HOME=`which mpicxx | perl -pe 's!/bin/.*!!'`; \
-  if test -z "$${MPI_HOME}"; then \
-    export MPI_HOME=/opt/$(ROLLMPI); \
+  if test -z "$${MPIHOME}"; then \
+    export MPIHOME=/opt/$(ROLLMPI); \
   fi; \
-  echo Using MPI from $${MPI_HOME}; \
-  export PATH=$${PATH}:$${MPI_HOME}/bin; \
-  export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
-
-CCOMP = gcc
-CPPCOMP = g++
-FORTRAN = gfortran
-ifeq ("$(ROLLCOMPILER)", "intel")
-  CCOMP = icc
-  CPPCOMP = icpc
-  FORTRAN = ifort
-else ifeq ("$(ROLLCOMPILER)", "pgi")
-  CCOMP = pgcc
-  CPPCOMP = pgCC
-  FORTRAN = pgf77
-endif
+  echo === MPIHOME ===; \
+  echo $${MPIHOME}
 
 -include $(ROCKSROOT)/etc/Rules.mk
+
+MXML_CACHE = $(REDHAT.ROOT)/src/build-mxml-$(ROLLCOMPILER)
+PAPI_CACHE = $(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER)
 
 build: $(SRC_DIRS)
 	cp patch-files/configure $(SOURCE_DIR)
@@ -117,26 +111,25 @@ build: $(SRC_DIRS)
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE_DIR); \
-	  export MXML_HOME=$(REDHAT.ROOT)/src/build-mxml-$(ROLLCOMPILER); \
-	  export PAPI_HOME=$(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER); \
-	  export CC=$(CCOMP); \
-	  export F77=$(FORTRAN); \
-	  export CXX=$(CPPCOMP); \
-	  export LDFLAGS="-L$${MXML_HOME}/lib -lpthread"; \
-	  export CFLAGS=-I$${MXML_HOME}/include; \
-	  export CXXFLAGS=-I$${MXML_HOME}/include; \
+	  export CC=$(CC); \
+	  export F77=$(F77); \
+	  export CXX=$(CXX); \
+	  export LDFLAGS="-L$(MXML_CACHE)/lib -lpthread"; \
+	  export CFLAGS=-I$(MXML_CACHE)/include; \
+	  export CXXFLAGS=-I$(MXML_CACHE)/include; \
 	  export MPIF77=`which mpif77`; \
 	  export MPICC=`which mpicc`; \
-	  export LD_LIBRARY_PATH=$${PAPI_HOME}/lib:$${LD_LIBRARY_PATH}; \
-	  ./configure --prefix=$(PKGROOT) --with-papi=$${PAPI_HOME} \
+	  export LD_LIBRARY_PATH=$(PAPI_CACHE)/lib:$${LD_LIBRARY_PATH}; \
+	  export MXML_HOME=$(MXML_CACHE); \
+	  ./configure --prefix=$(PKGROOT) --with-papi=$(PAPI_CACHE) \
 	    --enable-posixio=yes --enable-parser --disable-shared; \
 	  make \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 	
 install::
-	mkdir -p $(ROOT)/$(PKGROOT)
-	mkdir -p $(PKGROOT)
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
+	-mkdir -p -m 755 $(PKGROOT)
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  $(COMPILERSETUP); \

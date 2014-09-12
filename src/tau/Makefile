@@ -56,16 +56,6 @@
 #
 # $Log$
 
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-ifndef ROLLMPI
-  ROLLMPI = openmpi
-endif
-
 REDHAT.ROOT = $(CURDIR)/../../
 
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
@@ -73,6 +63,27 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
 include pull.mk
+
+CC = gcc
+CXX = g++
+F77 = gfortran
+ifeq ("$(ROLLCOMPILER)", "intel")
+  CC = icc
+  CXX = icpc
+  F77 = intel
+else ifeq ("$(ROLLCOMPILER)", "pgi")
+  CC = pgcc
+  CXX = pgCC
+  F77 = pgi
+endif
+
+COMPILERSETUP = \
+  if test -e /etc/profile.d/modules.sh; then \
+    . /etc/profile.d/modules.sh; \
+    module load $(ROLLCOMPILER) || true; \
+  fi; \
+  echo === Compiler and version ===; \
+  $(CC) --version
 
 ifeq ("$(ROLLNETWORK)", "eth")
   MPIMODULE = $(ROLLMPI)
@@ -83,54 +94,34 @@ endif
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module load $(MPIMODULE); \
+    module load $(MPIMODULE) || true; \
   fi; \
-  export MPI_HOME=`which mpicxx | perl -pe 's!/bin/.*!!'`; \
-  if test -z "$${MPI_HOME}"; then \
-    export MPI_HOME=/opt/$(ROLLMPI); \
+  if test -z "$${MPIHOME}"; then \
+    export MPIHOME=/opt/$(ROLLMPI); \
   fi; \
-  echo Using MPI from $${MPI_HOME}; \
-  export PATH=$${PATH}:$${MPI_HOME}/bin; \
-  export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
+  echo === MPIHOME ===; \
+  echo $${MPIHOME}
 
--include $(ROCKSROOT)/etc/Rules.mk
-
-COMPILERSETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module load $(ROLLCOMPILER); \
-  fi
-
-CCOMP = gcc
-CPPCOMP = g++
-FORTRAN = gfortran
-ifeq ("$(ROLLCOMPILER)", "intel")
-  CCOMP = icc
-  CPPCOMP = icpc
-  FORTRAN = intel
-else ifeq ("$(ROLLCOMPILER)", "pgi")
-  CCOMP = pgcc
-  CPPCOMP = pgCC
-  FORTRAN = pgi
-endif
+PAPI_CACHE = $(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER)
+PDT_CACHE = $(REDHAT.ROOT)/src/build-pdt-$(ROLLCOMPILER)
 
 build: $(SRC_DIRS)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
-	mkdir -p $(PKGROOT)
-	mkdir -p $(ROOT)/$(PKGROOT)
+        # Using a bind mount appears to be the only way to prevent the build
+        # from incorporating $(ROOT) in binary files.
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
+	-mkdir -p -m 755 $(PKGROOT)
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
-	  export PAPI_HOME=$(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER); \
-	  export PDT_HOME=$(REDHAT.ROOT)/src/build-pdt-$(ROLLCOMPILER); \
 	  cd $(SOURCE_DIR); \
-	  ./installtau -prefix=$(PKGROOT) -cc=$(CCOMP) -c++=$(CPPCOMP) \
-	               -fortran=$(FORTRAN) -mpi -mpiinc=$${MPI_HOME}/include \
-	               -mpilib=$${MPI_HOME}/lib -papi=$${PAPI_HOME} \
-	               -pdt=$${PDT_HOME} -bfd=download \
+	  ./installtau -prefix=$(PKGROOT) -cc=$(CC) -c++=$(CXX) \
+	               -fortran=$(F77) -mpi -mpiinc=$${MPIHOME}/include \
+	               -mpilib=$${MPIHOME}/lib -papi=$(PAPI_CACHE) \
+	               -pdt=$(PDT_CACHE) -bfd=download \
 	)
 	umount $(PKGROOT)
 	-rmdir -p $(PKGROOT)
