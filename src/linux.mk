@@ -54,11 +54,11 @@
 # @Copyright@
 #
 
+# ipm depends on mxml, papi
+# tau depends on papi, pdt
 SRCDIRS = `find . -maxdepth 1 -type d \
-        -not -name pdt \
         -not -name tau \
         -not -name ipm \
-        -not -name mxml \
-        -not -name papi \
+        -not -name build* \
 	-not -name CVS \
-	-not -name .` pdt papi tau mxml ipm
+	-not -name .` ipm tau
