@@ -13,7 +13,7 @@ endif
 
 NAME           = ipm_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION        = 2.0.0
-RELEASE        = 0
+RELEASE        = 1
 PKGROOT        = /opt/ipm/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 
 SRC_SUBDIR     = ipm

@@ -5,7 +5,7 @@ COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
 NAME           = pdt_$(ROLLCOMPILER)
 VERSION        = 3.20
-RELEASE        = 0
+RELEASE        = 1
 PKGROOT        = /opt/pdt/$(ROLLCOMPILER)
 
 SRC_SUBDIR     = pdt

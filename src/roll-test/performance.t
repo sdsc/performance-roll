@@ -55,10 +55,7 @@ foreach my $compiler (@COMPILERS) {
 
          open(OUT, ">$TESTFILE-ipm.sh");
          print OUT <<END;
-if test -f /etc/profile.d/modules.sh; then
-  . /etc/profile.d/modules.sh
-  module load $compiler ${mpi}_${network} ipm papi
-fi
+module load $compiler ${mpi}_${network} ipm papi
 mkdir $TESTFILE-ipm.dir
 cd $TESTFILE-ipm.dir
 mpicc ../$TESTFILE-ipm.c -L\$IPMHOME/lib -lipm -L\$PAPIHOME/lib -lpapi
@@ -107,10 +104,7 @@ close(OUT);
 foreach my $compiler (@COMPILERS) {
   open(OUT, ">$TESTFILE-mxml.sh");
   print OUT <<END;
-if test -f /etc/profile.d/modules.sh; then
-  . /etc/profile.d/modules.sh
-  module load $compiler mxml;
-fi
+module load $compiler mxml;
 $CC{$compiler} -I\$MXML_BASE/include -o $TESTFILE-mxml.exe $TESTFILE-mxml.c -L\$MXML_BASE/lib -lmxml -lpthread
 ./$TESTFILE-mxml.exe
 END
@@ -174,12 +168,9 @@ close(OUT);
 foreach my $compiler (@COMPILERS) {
   open(OUT, ">$TESTFILE.sh");
   print OUT <<END;
-if test -f /etc/profile.d/modules.sh; then
-  . /etc/profile.d/modules.sh
-  module load $compiler papi
-fi
-  $CC{$compiler} -I\$PAPIHOME/include -o $TESTFILE-papi.exe $TESTFILE-papi.c -L\$PAPIHOME/lib -lpapi
-  ./$TESTFILE-papi.exe
+module load $compiler papi
+$CC{$compiler} -I\$PAPIHOME/include -o $TESTFILE-papi.exe $TESTFILE-papi.c -L\$PAPIHOME/lib -lpapi
+./$TESTFILE-papi.exe
 END
 
   close(OUT);
@@ -209,10 +200,7 @@ close(OUT);
 foreach my $compiler (@COMPILERS) {
   open(OUT, ">$TESTFILE-pdt.sh");
   print OUT <<END;
-if test -f /etc/profile.d/modules.sh; then
-  . /etc/profile.d/modules.sh
-  module load $compiler pdt
-fi
+module load $compiler pdt
 cparse $TESTFILE-pdt.c
 cat $TESTFILE-pdt.pdb
 END
@@ -234,10 +222,7 @@ foreach my $compiler (@COMPILERS) {
       foreach my $network (@NETWORKS) {
   open(OUT, ">$TESTFILE-tau.sh");
   print OUT <<END;
-if test -f /etc/profile.d/modules.sh; then
-  . /etc/profile.d/modules.sh
-  module load $compiler ${mpi}_${network} pdt tau
-fi
+module load $compiler ${mpi}_${network} pdt tau
 mkdir $TESTFILE-tau.dir
 cd $TESTFILE-tau.dir
 cp -r \$TAU_BASE/examples/taucompiler/c/* .
@@ -259,7 +244,6 @@ SKIP: {
 
   skip 'performance not installed', 1
     if $appliance !~ /$installedOnAppliancesPattern/;
-  skip 'modules not installed', 1 if ! -f '/etc/profile.d/modules.sh';
   foreach my $package(@packages) {
      foreach my $compiler (@COMPILERS) {
        `/bin/ls /opt/modulefiles/applications/.${compiler}/$package/[0-9]* 2>&1`;

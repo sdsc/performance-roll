@@ -5,7 +5,7 @@ COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
 NAME           = mxml_$(COMPILERNAME)
 VERSION        = 2.8
-RELEASE        = 0
+RELEASE        = 1
 PKGROOT        = /opt/mxml/$(COMPILERNAME)
 
 SRC_SUBDIR     = mxml

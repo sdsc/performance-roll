@@ -13,7 +13,7 @@ endif
 
 NAME           = tau_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION        = 2.23
-RELEASE        = 0
+RELEASE        = 1
 PKGROOT        = /opt/tau/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 
 SRC_SUBDIR     = tau
