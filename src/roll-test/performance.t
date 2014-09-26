@@ -110,7 +110,7 @@ $CC{$compiler} -I\$MXML_BASE/include -o $TESTFILE-mxml.exe $TESTFILE-mxml.c -L\$
 END
   close(OUT);
   $output = `/bin/bash $TESTFILE-mxml.sh 2>&1`;
-  ok($output =~ /node count is 3/, "mxml sample run for the $compiler compiler");
+  like($output, qr/node count is 3/, "mxml sample run for the $compiler compiler");
   `rm -f $TESTFILE-mxml.exe $TESTFILE-mxml.sh`;
 }
 
@@ -137,6 +137,7 @@ int main(int argc, char **argv) {
   float real_time, proc_time, mflops;
   long long flpins;
   int i,j,k;
+  int res;
 
   for(i = 0; i < INDEX; i++) {
     for(j = 0; j < INDEX; j++) {
@@ -145,16 +146,22 @@ int main(int argc, char **argv) {
     }
   }
 
-  if(PAPI_flops(&real_time, &proc_time, &flpins, &mflops) < PAPI_OK)
+  res = PAPI_flops(&real_time, &proc_time, &flpins, &mflops);
+  if(res < PAPI_OK) {
+    printf("%s\\n", PAPI_strerror(res));
     exit(1);
+  }
 
   for(i = 0; i < INDEX; i++)
     for(j = 0; j < INDEX; j++)
       for(k = 0; k < INDEX; k++)
         mresult[i][j] += matrixa[i][k] * matrixb[k][j];
 
-  if(PAPI_flops(&real_time, &proc_time, &flpins, &mflops) < PAPI_OK)
+  res = PAPI_flops(&real_time, &proc_time, &flpins, &mflops);
+  if(res < PAPI_OK) {
+    printf("%s\\n", PAPI_strerror(res));
     exit(2);
+  }
 
   printf("Real_time: %f\\nProc_time: %f\\nTotal flpins: %lld\\nMFLOPS: %f\\n",
   real_time, proc_time, flpins, mflops);
@@ -175,7 +182,7 @@ END
 
   close(OUT);
   $output = `/bin/bash $TESTFILE.sh 2>&1`;
-  ok($output =~ /MFLOPS:\s*\d+/, "papi sample run for the $compiler compiler");
+  like($output, qr/MFLOPS:\s*\d+/, "papi sample run for the $compiler compiler");
   `rm -f $TESTFILE-papi.exe $TESTFILE.sh`;
 }
 
@@ -206,7 +213,7 @@ cat $TESTFILE-pdt.pdb
 END
   close(OUT);
   $output = `/bin/bash $TESTFILE-pdt.sh 2>&1`;
-  ok($output =~ /stdout/, "pdt sample run for the $compiler compiler");
+  like($output, qr/stdout/, "pdt sample run for the $compiler compiler");
   `rm -f $TESTFILE-pdt.pdb`;
 }
 }
@@ -232,7 +239,7 @@ mpirun -np 4 ./ring
 END
   close(OUT);
   $output = `/bin/bash $TESTFILE-tau.sh 2>&1`;
-  ok($output =~ /3 done/, "tau sample run with $compiler ${mpi}_${network} ");
+  like($output, qr/3 done/, "tau sample run with $compiler ${mpi}_${network} ");
   `rm -rf $TESTFILE-tau.dir $TESTFILE-tau.sh`;
 }
 }
