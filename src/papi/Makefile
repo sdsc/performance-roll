@@ -100,6 +100,7 @@ PAPI_CACHE = $(REDHAT.ROOT)/src/build-papi-$(COMPILERNAME)
 build: $(SRC_DIRS)
 	( \
 	  $(COMPILERSETUP); \
+	  $(MPISETUP); \
 	  export CC=$(CC); \
 	  export CFLAGS="$(CONFIGURE_FLAGS)"; \
 	  export F77=$(F77); \
