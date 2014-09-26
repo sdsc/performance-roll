@@ -1,5 +1,9 @@
-NAME       = mxml-modules_$(ROLLCOMPILER)
-VERSION    = 2.8
-RELEASE    = 0
+NAME        = mxml-modules_$(ROLLCOMPILER)
+RELEASE     = 1
+PKGROOT     = /opt/modulefiles/applications/.$(ROLLCOMPILER)/mxml
 
-RPM.EXTRAS = AutoReq:No
+VERSION_SRC = $(REDHAT.ROOT)/src/mxml/version.mk
+VERSION_INC = version.inc
+include $(VERSION_INC)
+
+RPM.EXTRAS  = AutoReq:No

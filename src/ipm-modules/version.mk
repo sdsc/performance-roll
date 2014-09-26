@@ -1,5 +1,9 @@
-NAME       = ipm-modules_$(ROLLCOMPILER)
-VERSION    = 2.0.0
-RELEASE    = 0
+NAME        = ipm-modules_$(ROLLCOMPILER)
+RELEASE     = 1
+PKGROOT     = /opt/modulefiles/applications/.$(ROLLCOMPILER)/ipm
 
-RPM.EXTRAS = AutoReq:No
+VERSION_SRC = $(REDHAT.ROOT)/src/ipm/version.mk
+VERSION_INC = version.inc
+include $(VERSION_INC)
+
+RPM.EXTRAS  = AutoReq:No

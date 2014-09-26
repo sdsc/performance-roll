@@ -1,5 +1,9 @@
-NAME       = pdt-modules_$(ROLLCOMPILER)
-VERSION    = 3.20
-RELEASE    = 0
+NAME        = pdt-modules_$(ROLLCOMPILER)
+RELEASE     = 1
+PKGROOT     = /opt/modulefiles/applications/.$(ROLLCOMPILER)/pdt
 
-RPM.EXTRAS = AutoReq:No
+VERSION_SRC = $(REDHAT.ROOT)/src/pdt/version.mk
+VERSION_INC = version.inc
+include $(VERSION_INC)
+
+RPM.EXTRAS  = AutoReq:No
