@@ -1,8 +1,11 @@
-NAME        = pdt-modules_$(ROLLCOMPILER)
-RELEASE     = 1
-PKGROOT     = /opt/modulefiles/applications/.$(ROLLCOMPILER)/pdt
+PACKAGE     = pdt
+CATEGORY    = applications
 
-VERSION_SRC = $(REDHAT.ROOT)/src/pdt/version.mk
+NAME        = $(PACKAGE)-modules_$(ROLLCOMPILER)
+RELEASE     = 2
+PKGROOT     = /opt/modulefiles/$(CATEGORY)/.$(ROLLCOMPILER)/$(PACKAGE)
+
+VERSION_SRC = $(REDHAT.ROOT)/src/$(PACKAGE)/version.mk
 VERSION_INC = version.inc
 include $(VERSION_INC)
 
