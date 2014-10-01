@@ -13,6 +13,7 @@ my @COMPILERS = split(/\s+/, 'ROLLCOMPILER');
 my @MPIS = split(/\s+/, 'ROLLMPI');
 my @NETWORKS = split(/\s+/, 'ROLLNETWORK');
 my %CC = ('gnu' => 'gcc', 'intel' => 'icc', 'pgi' => 'pgcc');
+my %CXX = ('gnu' => 'g++', 'intel' => 'icpc', 'pgi' => 'pgCC');
 my @packages = ('ipm', 'mxml', 'papi', 'pdt', 'tau');
 my $output;
 my $TESTFILE = 'tmpperformance';
@@ -233,7 +234,7 @@ module load $compiler ${mpi}_${network} pdt tau
 mkdir $TESTFILE-tau.dir
 cd $TESTFILE-tau.dir
 cp -r \$TAU_BASE/examples/taucompiler/c/* .
-export TAU_MAKEFILE=\$TAU_BASE/x86_64/lib/Makefile.tau-papi-mpi-pdt
+export TAU_MAKEFILE=\$TAU_BASE/x86_64/lib/Makefile.tau-$CXX{$compiler}-papi-mpi-pdt
 make
 mpirun -np 4 ./ring
 END
