@@ -11,7 +11,6 @@ my $appliance = $#ARGV >= 0 ? $ARGV[0] :
 my $installedOnAppliancesPattern = '.';
 my @COMPILERS = split(/\s+/, 'ROLLCOMPILER');
 my @MPIS = split(/\s+/, 'ROLLMPI');
-my @NETWORKS = split(/\s+/, 'ROLLNETWORK');
 my %CC = ('gnu' => 'gcc', 'intel' => 'icc', 'pgi' => 'pgcc');
 my %CXX = ('gnu' => 'g++', 'intel' => 'icpc', 'pgi' => 'pgCC');
 my @packages = ('ipm', 'mxml', 'papi', 'pdt', 'tau');
@@ -52,22 +51,19 @@ END
 close(OUT);
 foreach my $compiler (@COMPILERS) {
   foreach my $mpi (@MPIS) {
-      foreach my $network (@NETWORKS) {
-
-         open(OUT, ">$TESTFILE-ipm.sh");
-         print OUT <<END;
-module load $compiler ${mpi}_${network} ipm papi
+    open(OUT, ">$TESTFILE-ipm.sh");
+    print OUT <<END;
+module load $compiler $mpi ipm
 mkdir $TESTFILE-ipm.dir
 cd $TESTFILE-ipm.dir
 mpicc ../$TESTFILE-ipm.c -L\$IPMHOME/lib -lipm -L\$PAPIHOME/lib -lpapi
 mpirun -np 4 ./a.out
 END
-  close(OUT);
-  $output = `/bin/bash $TESTFILE-ipm.sh 2>&1`;
-  like($output, qr/process 3/, "ipm sample run with $compiler ${mpi}_${network}");
-  like($output, qr/wallclock\s*:\s*\d+/, 'ipm sample output');
-  `rm -rf $TESTFILE-ipm.dir $TESTFILE-ipm.sh`;
-  }
+    close(OUT);
+    $output = `/bin/bash $TESTFILE-ipm.sh 2>&1`;
+    like($output, qr/process 3/, "ipm sample run with $compiler $mpi");
+    like($output, qr/wallclock\s*:\s*\d+/, 'ipm sample output');
+    `rm -rf $TESTFILE-ipm.dir $TESTFILE-ipm.sh`;
   }
 }
 
@@ -227,10 +223,9 @@ SKIP: {
 
 foreach my $compiler (@COMPILERS) {
   foreach my $mpi (@MPIS) {
-      foreach my $network (@NETWORKS) {
-  open(OUT, ">$TESTFILE-tau.sh");
-  print OUT <<END;
-module load $compiler ${mpi}_${network} pdt tau
+    open(OUT, ">$TESTFILE-tau.sh");
+    print OUT <<END;
+module load $compiler $mpi tau
 mkdir $TESTFILE-tau.dir
 cd $TESTFILE-tau.dir
 cp -r \$TAU_BASE/examples/taucompiler/c/* .
@@ -238,12 +233,11 @@ export TAU_MAKEFILE=\$TAU_BASE/x86_64/lib/Makefile.tau-$CXX{$compiler}-papi-mpi-
 make
 mpirun -np 4 ./ring
 END
-  close(OUT);
-  $output = `/bin/bash $TESTFILE-tau.sh 2>&1`;
-  like($output, qr/3 done/, "tau sample run with $compiler ${mpi}_${network} ");
-  `rm -rf $TESTFILE-tau.dir $TESTFILE-tau.sh`;
-}
-}
+    close(OUT);
+    $output = `/bin/bash $TESTFILE-tau.sh 2>&1`;
+    like($output, qr/3 done/, "tau sample run with $compiler $mpi");
+    `rm -rf $TESTFILE-tau.dir $TESTFILE-tau.sh`;
+  }
 }
 
 }

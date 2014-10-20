@@ -3,18 +3,15 @@ ifndef ROLLCOMPILER
 endif
 COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-
 ifndef ROLLMPI
-  ROLLMPI = openmpi
+  ROLLMPI = rocks-openmpi
 endif
+MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
-NAME           = ipm_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
+NAME           = ipm_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 2.0.0
-RELEASE        = 1
-PKGROOT        = /opt/ipm/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
+RELEASE        = 2
+PKGROOT        = /opt/ipm/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = ipm
 

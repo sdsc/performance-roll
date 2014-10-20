@@ -63,8 +63,8 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 include Rules.mk
 include pull.mk
 
-ROLLMPI = openmpi
-ROLLNETWORK = ib
+FIRSTMPI = $(firstword $(ROLLMPI))
+MPINAME := $(firstword $(subst /, ,$(FIRSTMPI)))
 
 CC = gcc
 F77 = gfortran
@@ -84,14 +84,8 @@ COMPILERSETUP = \
   echo === Compiler and version ===; \
   $(CC) --version
 
-ifeq ("$(ROLLNETWORK)", "eth")
-  MPIMODULE = $(ROLLMPI)
-else
-  MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
-endif
-
 MPISETUP = \
-  module load $(MPIMODULE) || true; \
+  module load $(ROLLMPI) || true; \
   echo === MPIHOME ===; \
   echo $${MPIHOME}
 

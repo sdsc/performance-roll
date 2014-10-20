@@ -82,7 +82,7 @@ COMPILERSETUP = \
   echo === Compiler and version ===; \
   $(CC) --version
 
-PDT_CACHE = $(REDHAT.ROOT)/src/build-pdt-$(ROLLCOMPILER)
+PDT_CACHE = $(REDHAT.ROOT)/src/build-pdt-$(COMPILERNAME)
 
 build: $(SRC_DIRS)
 	@echo "::: Package $(NAME) build complete :::"

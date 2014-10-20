@@ -1,28 +1,30 @@
 #%Module1.0
-if { ! [info exists env(MPIHOME)] } {
-  puts stderr "Need to load an mpi module first"
-  exit
-} elseif { [string match "*mpich2*" $env(MPIHOME)] } {
-  set mpiType mpich2
-} elseif { [string match "*mvapich2*" $env(MPIHOME)] } {
-  set mpiType mvapich2
-} elseif { [string match "*openmpi*" $env(MPIHOME)] } {
-  set mpiType openmpi
-} else {
-  puts stderr "Unknown mpi $env(MPIHOME)"
-  exit
+module-whatis "tau"
+module-whatis "Version: VERSION"
+module-whatis "Description: tau"
+module-whatis "Compiler: COMPILERNAME"
+module-whatis "MPI Flavors: ROLLMPI"
+if {! [info exists ::env(MPIHOME)] || ! [info exists ::env(LOADEDMODULES)]} {
+  puts stderr "Need to load an mpi module before loading fftw/VERSION"
+  exit 1
 }
-module load papi
-prepend-path PATH /opt/tau/ROLLCOMPILER/$mpiType/ROLLNETWORK/x86_64/bin
-setenv PAPI_BASE $env(PAPIHOME)
-setenv TAU_BASE /opt/tau/ROLLCOMPILER/$mpiType/ROLLNETWORK
-setenv TAUHOME /opt/tau/ROLLCOMPILER/$mpiType/ROLLNETWORK
-prepend-path LD_LIBRARY_PATH /opt/tau/ROLLCOMPILER/$mpiType/ROLLNETWORK/x86_64/lib
-prepend-path LD_LIBRARY_PATH /opt/papi/ROLLCOMPILER/lib
-prepend-path LD_LIBRARY_PATH /opt/pdt/ROLLCOMPILER/x86_64/lib
-prepend-path PATH /opt/papi/ROLLCOMPILER/bin
-prepend-path PATH /opt/pdt/ROLLCOMPILER/x86_64/bin
-setenv PDT_BASE /opt/pdt/ROLLCOMPILER
-if { [string equal $mpiType "mvapich2"] } {
+foreach {x} [list ROLLMPI] {
+  # Look for flavor in LOADEDMODULES, delimited by colon or end of string.
+  # Can also be followed by / (version number).
+  if {[regexp [format {[:^]%s[:/$]} $x] $::env(LOADEDMODULES)]} {
+    set mpi $x
+    break
+  }
+}
+if {! [info exists mpi]} {
+  puts stderr "No supported MPI flavor found"
+  exit 1
+}
+prepend-path PATH /opt/tau/ROLLCOMPILER/$mpi/x86_64/bin
+setenv TAU_BASE /opt/tau/ROLLCOMPILER/$mpi
+setenv TAUHOME /opt/tau/ROLLCOMPILER/$mpi
+prepend-path LD_LIBRARY_PATH /opt/tau/ROLLCOMPILER/$mpi/x86_64/lib
+if { [string first "mvapich2" $mpi] >= 0 } {
   setenv TAU_LINKER_OPT17 -lmpl
 }
+module load papi pdt

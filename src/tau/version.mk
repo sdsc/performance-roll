@@ -3,18 +3,15 @@ ifndef ROLLCOMPILER
 endif
 COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-
 ifndef ROLLMPI
   ROLLMPI = openmpi
 endif
+MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
-NAME           = tau_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
+NAME           = tau_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 2.23
 RELEASE        = 1
-PKGROOT        = /opt/tau/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
+PKGROOT        = /opt/tau/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = tau
 

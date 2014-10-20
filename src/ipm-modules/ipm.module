@@ -1,23 +1,27 @@
 #%Module1.0
-if { ! [info exists env(MPIHOME)] } {
-  puts stderr "Need to load an mpi module first"
-  exit
-} elseif { [string match "*mpich2*" $env(MPIHOME)] } {
-  set mpiType mpich2
-} elseif { [string match "*mpich*" $env(MPIHOME)] } {
-  set mpiType mpich
-} elseif { [string match "*mvapich2*" $env(MPIHOME)] } {
-  set mpiType mvapich2
-} elseif { [string match "*openmpi*" $env(MPIHOME)] } {
-  set mpiType openmpi
-} else {
-  puts stderr "Unknown mpi $env(MPIHOME)"
-  exit
+module-whatis "ipm"
+module-whatis "Version: VERSION"
+module-whatis "Description: ipm"
+module-whatis "Compiler: COMPILERNAME"
+module-whatis "MPI Flavors: ROLLMPI"
+if {! [info exists ::env(MPIHOME)] || ! [info exists ::env(LOADEDMODULES)]} {
+  puts stderr "Need to load an mpi module before loading fftw/VERSION"
+  exit 1
 }
-setenv IPMHOME /opt/ipm/ROLLCOMPILER/$mpiType/ROLLNETWORK
-prepend-path PATH /opt/ipm/ROLLCOMPILER/$mpiType/ROLLNETWORK/bin
-setenv SDSC_IPM_BASE /opt/ipm/ROLLCOMPILER/$mpiType/ROLLNETWORK
-setenv PAPI_BASE /opt/papi/ROLLCOMPILER
-prepend-path LD_LIBRARY_PATH /opt/ipm/ROLLCOMPILER/$mpiType/ROLLNETWORK/lib
-prepend-path LD_LIBRARY_PATH /opt/mxml/ROLLCOMPILER/lib
-prepend-path LD_LIBRARY_PATH /opt/papi/ROLLCOMPILER/lib
+foreach {x} [list ROLLMPI] {
+  # Look for flavor in LOADEDMODULES, delimited by colon or end of string.
+  # Can also be followed by / (version number).
+  if {[regexp [format {[:^]%s[:/$]} $x] $::env(LOADEDMODULES)]} {
+    set mpi $x
+    break
+  }
+}
+if {! [info exists mpi]} {
+  puts stderr "No supported MPI flavor found"
+  exit 1
+}
+setenv IPMHOME /opt/ipm/ROLLCOMPILER/$mpi
+prepend-path PATH /opt/ipm/ROLLCOMPILER/$mpi/bin
+setenv SDSC_IPM_BASE /opt/ipm/ROLLCOMPILER/$mpi
+prepend-path LD_LIBRARY_PATH /opt/ipm/ROLLCOMPILER/$mpi/lib
+module load papi mxml

@@ -67,11 +67,11 @@ include pull.mk
 CC = gcc
 CXX = g++
 F77 = gfortran
-ifeq ("$(ROLLCOMPILER)", "intel")
+ifeq ("$(COMPILERNAME)", "intel")
   CC = icc
   CXX = icpc
   F77 = intel
-else ifeq ("$(ROLLCOMPILER)", "pgi")
+else ifeq ("$(COMPILERNAME)", "pgi")
   CC = pgcc
   CXX = pgCC
   F77 = pgi
@@ -82,19 +82,13 @@ COMPILERSETUP = \
   echo === Compiler and version ===; \
   $(CC) --version
 
-ifeq ("$(ROLLNETWORK)", "eth")
-  MPIMODULE = $(ROLLMPI)
-else
-  MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
-endif
-
 MPISETUP = \
-  module load $(MPIMODULE) || true; \
+  module load $(ROLLMPI) || true; \
   echo === MPIHOME ===; \
   echo $${MPIHOME}
 
-PAPI_CACHE = $(REDHAT.ROOT)/src/build-papi-$(ROLLCOMPILER)
-PDT_CACHE = $(REDHAT.ROOT)/src/build-pdt-$(ROLLCOMPILER)
+PAPI_CACHE = $(REDHAT.ROOT)/src/build-papi-$(COMPILERNAME)
+PDT_CACHE = $(REDHAT.ROOT)/src/build-pdt-$(COMPILERNAME)
 
 build: $(SRC_DIRS)
 	@echo "::: Package $(NAME) build complete :::"

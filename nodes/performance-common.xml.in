@@ -20,11 +20,11 @@ Copyright (c) 2000 - 2014 The Regents of the University of California.
 All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 </copyright>
 
-<package>ipm_COMPILERNAME_ROLLMPI_ROLLNETWORK</package>
+<package>ipm_COMPILERNAME_MPINAME</package>
 <package>mxml_COMPILERNAME</package>
 <package>papi_COMPILERNAME</package>
 <package>pdt_COMPILERNAME</package>
-<package>tau_COMPILERNAME_ROLLMPI_ROLLNETWORK</package>
+<package>tau_COMPILERNAME_MPINAME</package>
 <package>ipm-modules_COMPILERNAME</package>
 <package>mxml-modules_COMPILERNAME</package>
 <package>papi-modules_COMPILERNAME</package>
