@@ -8,9 +8,9 @@ ifndef ROLLMPI
 endif
 MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
-NAME           = tau_$(COMPILERNAME)_$(MPINAME)
+NAME           = sdsc-tau_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 2.23
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/tau/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = tau

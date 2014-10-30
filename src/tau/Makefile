@@ -62,55 +62,56 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
-include pull.mk
+include $(SDSCDEVEL)/Pull.mk
+include $(SDSCDEVEL)/Rules.mk
 
-CC = gcc
-CXX = g++
-F77 = gfortran
+FORTRAN = gfortran
 ifeq ("$(COMPILERNAME)", "intel")
-  CC = icc
-  CXX = icpc
-  F77 = intel
+  FORTRAN = intel
 else ifeq ("$(COMPILERNAME)", "pgi")
-  CC = pgcc
-  CXX = pgCC
-  F77 = pgi
+  FORTRAN = pgi
 endif
 
-COMPILERSETUP = \
-  module load $(ROLLCOMPILER) || true; \
-  echo === Compiler and version ===; \
-  $(CC) --version
-
-MPISETUP = \
-  module load $(ROLLMPI) || true; \
-  echo === MPIHOME ===; \
-  echo $${MPIHOME}
-
+LICENSE_FILES = $(SOURCE_DIR)/COPYRIGHT
 PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)
 PDT_CACHE = $(REDHAT.ROOT)/cache/build-pdt-$(COMPILERNAME)
+
+DESCRIPTION:
+	$(MODULE_LOAD_CC); \
+	( \
+	  $(DESCRIBE_PKG); \
+	  $(DESCRIBE_CC); \
+	  $(DESCRIBE_MPI) \
+	) > $@
+
+LICENSE: $(SRC_DIRS)
+	cat $(LICENSE_FILES) | tr '\n' ' ' | \
+	  grep -qi 'Copyright.*University of Oregon'; \
+	if test $? eq 0; then
+	  echo 'University of Oregon' > $@; \
+	else \
+	  exit 2; \
+	fi
 
 build: $(SRC_DIRS)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
-        # Using a bind mount appears to be the only way to prevent the build
-        # from incorporating $(ROOT) in binary files.
-	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
-	-mkdir -p -m 755 $(PKGROOT)
-	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
+	# Using a bind mount appears to be the only way to prevent the build
+	# from incorporating $(ROOT) in binary files.
+	$(PKGROOT_BIND_MOUNT)
 	( \
-	  $(COMPILERSETUP); \
-	  $(MPISETUP); \
+	  $(MODULE_LOAD_CC); \
+	  $(MODULE_LOAD_MPI); \
 	  cd $(SOURCE_DIR); \
 	  ./installtau -prefix=$(PKGROOT) -cc=$(CC) -c++=$(CXX) \
-	               -fortran=$(F77) -mpi -mpiinc=$${MPIHOME}/include \
+	               -fortran=$(FORTRAN) -mpi -mpiinc=$${MPIHOME}/include \
 	               -mpilib=$${MPIHOME}/lib -papi=$(PAPI_CACHE) \
 	               -pdt=$(PDT_CACHE) -bfd=download \
 	)
-	umount $(PKGROOT)
-	-rmdir -p $(PKGROOT)
+	$(PKGROOT_BIND_UMOUNT)
+	$(INSTALL_LICENSE_FILES)
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR)
+	rm -rf $(SOURCE_DIR) DESCRIPTION LICENSE

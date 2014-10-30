@@ -62,27 +62,36 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
-include pull.mk
+include $(SDSCDEVEL)/Pull.mk
+include $(SDSCDEVEL)/Rules.mk
 
-CC = gcc
-F77 = gfortran
 CONFIGURE_FLAGS =
 ifeq ("$(COMPILERNAME)", "intel")
-  CC = icc
-  F77 = ifort
   CONFIGURE_FLAGS = -icpc
 else ifeq ("$(COMPILERNAME)", "pgi")
-  CC = pgcc
-  F77 = pgf77
   CONFIGURE_FLAGS = -pgCC
 endif
 
-COMPILERSETUP = \
-  module load $(ROLLCOMPILER) || true; \
-  echo === Compiler and version ===; \
-  $(CC) --version
-
+LICENSE_FILES = $(SOURCE_DIR)/LICENSE
 PDT_CACHE = $(REDHAT.ROOT)/cache/build-pdt-$(COMPILERNAME)
+
+$(NAME).spec: DESCRIPTION LICENSE
+
+DESCRIPTION:
+	$(MODULE_LOAD_CC); \
+	( \
+	  $(DESCRIBE_PKG); \
+	  $(DESCRIBE_C) \
+	) > $@
+
+LICENSE: $(SRC_DIRS)
+	cat $(LICENSE_FILES) | tr '\n' ' ' | \
+	  grep -qi 'Copyright[^a-zA-Z]*University of Oregon'; \
+	if test $$? -eq 0; then \
+	  echo 'University of Oregon' > $@; \
+	else \
+	  exit 2; \
+	fi
 
 build: $(SRC_DIRS)
 	@echo "::: Package $(NAME) build complete :::"
@@ -92,11 +101,9 @@ install::
         # from incorporating $(ROOT) in binary files.  Also, the configure
 	# script apparently creates installation subdirs, which is why the
 	# build target is empty and all steps are part of install
-	mkdir -p $(ROOT)/$(PKGROOT)
-	-mkdir -p $(PKGROOT)
-	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
+	$(PKGROOT_BIND_MOUNT)
 	( \
-	  $(COMPILERSETUP); \
+	  $(MODULE_LOAD_CC); \
 	  export CC=$(CC); \
 	  export CFLAGS=""; \
 	  export F77=$(F77); \
@@ -106,11 +113,11 @@ install::
 	  make; \
 	  make install \
 	)
-	umount $(PKGROOT)
-	-rmdir -p $(PKGROOT)
+	$(PKGROOT_BIND_UMOUNT)
+	$(INSTALL_LICENSE_FILES)
 	mkdir -p -m 755 $(PDT_CACHE)
 	cp -r $(ROOT)/$(PKGROOT)/* $(PDT_CACHE)/
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR)
+	rm -rf $(SOURCE_DIR) DESCRIPTION LICENSE

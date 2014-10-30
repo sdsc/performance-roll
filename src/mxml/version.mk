@@ -3,9 +3,9 @@ ifndef ROLLCOMPILER
 endif
 COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
-NAME           = mxml_$(COMPILERNAME)
+NAME           = sdsc-mxml_$(COMPILERNAME)
 VERSION        = 2.8
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/mxml/$(COMPILERNAME)
 
 SRC_SUBDIR     = mxml

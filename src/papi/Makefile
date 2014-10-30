@@ -61,40 +61,43 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
-include pull.mk
+include $(SDSCDEVEL)/Pull.mk
+include $(SDSCDEVEL)/Rules.mk
 
 FIRSTMPI = $(firstword $(ROLLMPI))
 MPINAME := $(firstword $(subst /, ,$(FIRSTMPI)))
 
-CC = gcc
-F77 = gfortran
 CONFIGURE_FLAGS =
 ifeq ("$(COMPILERNAME)", "intel")
-  CC = icc
-  F77 = ifort
   CONFIGURE_FLAGS = -gcc
 else ifeq ("$(COMPILERNAME)", "pgi")
-  CC = pgcc
-  F77 = pgf77
   CONFIGURE_FLAGS = -noswitcherror
 endif
 
-COMPILERSETUP = \
-  module load $(ROLLCOMPILER) || true; \
-  echo === Compiler and version ===; \
-  $(CC) --version
-
-MPISETUP = \
-  module load $(ROLLMPI) || true; \
-  echo === MPIHOME ===; \
-  echo $${MPIHOME}
-
+LICENSE_FILES = $(SOURCE_DIR)/LICENSE.txt
 PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)
+
+$(NAME).spec: DESCRIPTION LICENSE
+
+DESCRIPTION:
+	$(MODULE_LOAD_CC); \
+	( \
+	  $(DESCRIBE_PKG); \
+	  $(DESCRIBE_CC); \
+	  $(DESCRIBE_MPI) \
+	) > $@
+
+LICENSE: $(SRC_DIRS)
+	if grep -qi 'BSD License' $(SOURCE_DIR)/LICENSE.txt; then \
+	  echo 'BSD' > $@; \
+	else \
+	  exit 2; \
+	fi
 
 build: $(SRC_DIRS)
 	( \
-	  $(COMPILERSETUP); \
-	  $(MPISETUP); \
+	  $(MODULE_LOAD_CC); \
+	  $(MODULE_LOAD_MPI); \
 	  export CC=$(CC); \
 	  export CFLAGS="$(CONFIGURE_FLAGS)"; \
 	  export F77=$(F77); \
@@ -115,7 +118,8 @@ install::
 	)
 	mkdir -p -m 755 $(PAPI_CACHE)
 	cp -r $(ROOT)/$(PKGROOT)/* $(PAPI_CACHE)/
+	$(INSTALL_LICENSE_FILES)
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR)
+	rm -rf $(SOURCE_DIR) DESCRIPTION LICENSE

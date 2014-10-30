@@ -1,8 +1,8 @@
 PACKAGE     = pdt
 CATEGORY    = applications
 
-NAME        = $(PACKAGE)-modules_$(ROLLCOMPILER)
-RELEASE     = 2
+NAME        = sdsc-$(PACKAGE)-modules_$(ROLLCOMPILER)
+RELEASE     = 3
 PKGROOT     = /opt/modulefiles/$(CATEGORY)/.$(ROLLCOMPILER)/$(PACKAGE)
 
 VERSION_SRC = $(REDHAT.ROOT)/src/$(PACKAGE)/version.mk
