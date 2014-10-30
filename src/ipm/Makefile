@@ -87,8 +87,8 @@ MPISETUP = \
 
 -include $(ROCKSROOT)/etc/Rules.mk
 
-MXML_CACHE = $(REDHAT.ROOT)/src/build-mxml-$(COMPILERNAME)
-PAPI_CACHE = $(REDHAT.ROOT)/src/build-papi-$(COMPILERNAME)
+MXML_CACHE = $(REDHAT.ROOT)/cache/build-mxml-$(COMPILERNAME)
+PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)
 
 build: $(SRC_DIRS)
 	cp patch-files/configure $(SOURCE_DIR)

@@ -87,8 +87,8 @@ MPISETUP = \
   echo === MPIHOME ===; \
   echo $${MPIHOME}
 
-PAPI_CACHE = $(REDHAT.ROOT)/src/build-papi-$(COMPILERNAME)
-PDT_CACHE = $(REDHAT.ROOT)/src/build-pdt-$(COMPILERNAME)
+PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)
+PDT_CACHE = $(REDHAT.ROOT)/cache/build-pdt-$(COMPILERNAME)
 
 build: $(SRC_DIRS)
 	@echo "::: Package $(NAME) build complete :::"

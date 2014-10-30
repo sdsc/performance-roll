@@ -56,9 +56,7 @@
 
 # ipm depends on mxml, papi
 # tau depends on papi, pdt
-SRCDIRS = `find . -maxdepth 1 -type d \
-        -not -name tau \
+SRCDIRS = `find . -maxdepth 1 -type d -not -name CVS -not -name . \
         -not -name ipm \
-        -not -name build* \
-	-not -name CVS \
-	-not -name .` ipm tau
+        -not -name tau \
+	` ipm tau

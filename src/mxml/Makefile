@@ -79,7 +79,7 @@ COMPILERSETUP = \
   echo === Compiler and version ===; \
   $(CC) --version
 
-MXML_CACHE = $(REDHAT.ROOT)/src/build-mxml-$(COMPILERNAME)
+MXML_CACHE = $(REDHAT.ROOT)/cache/build-mxml-$(COMPILERNAME)
 
 build: $(SRC_DIRS)
 	( \

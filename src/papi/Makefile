@@ -89,7 +89,7 @@ MPISETUP = \
   echo === MPIHOME ===; \
   echo $${MPIHOME}
 
-PAPI_CACHE = $(REDHAT.ROOT)/src/build-papi-$(COMPILERNAME)
+PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)
 
 build: $(SRC_DIRS)
 	( \

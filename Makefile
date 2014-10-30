@@ -91,5 +91,5 @@ distclean: clean
 	  rm -f $$o; \
 	done
 	rm -fr RPMS SRPMS
-	rm -rf src/build-*
+	rm -rf cache
 	-rm -f build.log
