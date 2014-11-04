@@ -8,9 +8,9 @@ ifndef ROLLMPI
 endif
 MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
-NAME           = ipm_$(COMPILERNAME)_$(MPINAME)
+NAME           = sdsc-ipm_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 2.0.0
-RELEASE        = 2
+RELEASE        = 3
 PKGROOT        = /opt/ipm/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = ipm

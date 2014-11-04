@@ -60,41 +60,35 @@ REDHAT.ROOT = $(CURDIR)/../../
 
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
-include pull.mk
+include $(SDSCDEVEL)/Pull.mk
+include $(SDSCDEVEL)/Rules.mk
 
-CC = gcc
-CXX = g++
-F77 = gfortran
-ifeq ("$(COMPILERNAME)", "intel")
-  CC = icc
-  CXX = icpc
-  F77 = ifort
-else ifeq ("$(COMPILERNAME)", "pgi")
-  CC = pgcc
-  CXX = pgCC
-  F77 = pgf77
-endif
-
-COMPILERSETUP = \
-  module load $(ROLLCOMPILER) || true; \
-  echo === Compiler and version ===; \
-  $(CC) --version
-
-MPISETUP = \
-  module load $(ROLLMPI) || true; \
-  echo === MPIHOME ===; \
-  echo $${MPIHOME}
-
--include $(ROCKSROOT)/etc/Rules.mk
-
+LICENSE_FILES = $(SOURCE_DIR)/COPYING
 MXML_CACHE = $(REDHAT.ROOT)/cache/build-mxml-$(COMPILERNAME)
 PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)
+
+$(NAME).spec: DESCRIPTION LICENSE
+
+DESCRIPTION:
+	$(MODULE_LOAD_CC); \
+	( \
+	  $(DESCRIBE_PKG); \
+	  $(DESCRIBE_CC); \
+	  $(DESCRIBE_MPI) \
+	) > $@
+
+LICENSE: $(SRC_DIRS)
+	if grep -qi 'Regents of the University of California' $(LICENSE_FILES); then \
+	  echo 'University of California' > $@; \
+	else \
+	  exit 2; \
+	fi
 
 build: $(SRC_DIRS)
 	cp patch-files/configure $(SOURCE_DIR)
 	( \
-	  $(COMPILERSETUP); \
-	  $(MPISETUP); \
+	  $(MODULE_LOAD_CC); \
+	  $(MODULE_LOAD_MPI); \
 	  cd $(SOURCE_DIR); \
 	  export CC=$(CC); \
 	  export F77=$(F77); \
@@ -113,18 +107,16 @@ build: $(SRC_DIRS)
 	@echo "::: Package $(NAME) build complete :::"
 	
 install::
-	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
-	-mkdir -p -m 755 $(PKGROOT)
-	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
+	$(PKGROOT_BIND_MOUNT)
 	( \
-	  $(COMPILERSETUP); \
-	  $(MPISETUP); \
+	  $(MODULE_LOAD_CC); \
+	  $(MODULE_LOAD_MPI); \
 	  cd $(SOURCE_DIR); \
 	  make install \
 	)
-	umount $(PKGROOT)
-	-rmdir -p $(PKGROOT)
+	$(PKGROOT_BIND_UMOUNT)
+	$(INSTALL_LICENSE_FILES)
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR)
+	rm -rf $(SOURCE_DIR) DESCRIPTION LICENSE

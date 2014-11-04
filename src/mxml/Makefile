@@ -61,29 +61,31 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
-include pull.mk
+include $(SDSCDEVEL)/Pull.mk
+include $(SDSCDEVEL)/Rules.mk
 
-CC = gcc
-CXX = g++
-COMPILE_FLAGS = -fPIC
-ifeq ("$(COMPILERNAME)", "intel")
-  CC = icc
-  CXX = icpc
-else ifeq ("$(COMPILERNAME)", "pgi")
-  CC = pgcc
-  CXX = pgCC
-endif
-
-COMPILERSETUP = \
-  module load $(ROLLCOMPILER) || true; \
-  echo === Compiler and version ===; \
-  $(CC) --version
-
+LICENSE_FILES = $(SOURCE_DIR)/COPYING
 MXML_CACHE = $(REDHAT.ROOT)/cache/build-mxml-$(COMPILERNAME)
+
+$(NAME).spec: DESCRIPTION LICENSE
+
+DESCRIPTION:
+	$(MODULE_LOAD_CC); \
+	( \
+	  $(DESCRIBE_PKG); \
+	  $(DESCRIBE_CC) \
+	) > $@
+
+LICENSE: $(SRC_DIRS)
+	if grep -qi 'LGPL2' $(LICENSE_FILES); then \
+	  echo 'LGPL2' > $@; \
+	else \
+	  exit 2; \
+	fi
 
 build: $(SRC_DIRS)
 	( \
-	  $(COMPILERSETUP); \
+	  $(MODULE_LOAD_CC); \
 	  export CC=$(CC); \
 	  export CFLAGS="$(COMPILE_FLAGS)"; \
 	  export CXX=$(CXX); \
@@ -96,18 +98,16 @@ build: $(SRC_DIRS)
 install::
         # Using a bind mount appears to be the only way to prevent the build
         # from incorporating $(ROOT) in binary files.
-	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
-	-mkdir -p -m 755 $(PKGROOT)
-	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
+	$(PKGROOT_BIND_MOUNT)
 	( \
 	  cd $(SOURCE_DIR); \
 	  $(MAKE) prefix=$(ROOT)/$(PKGROOT) install \
 	)
-	umount $(PKGROOT)
-	-rmdir -p $(PKGROOT)
+	$(PKGROOT_BIND_UMOUNT)
 	mkdir -p -m 755 $(MXML_CACHE)
 	cp -r $(ROOT)/$(PKGROOT)/* $(MXML_CACHE)/
+	$(INSTALL_LICENSE_FILES)
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR)
+	rm -rf $(SOURCE_DIR) DESCRIPTION LICENSE
