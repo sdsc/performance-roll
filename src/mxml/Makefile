@@ -64,7 +64,6 @@ include Rules.mk
 include $(SDSCDEVEL)/Pull.mk
 include $(SDSCDEVEL)/Rules.mk
 
-LICENSE_FILES = $(SOURCE_DIR)/COPYING
 MXML_CACHE = $(REDHAT.ROOT)/cache/build-mxml-$(COMPILERNAME)
 
 $(NAME).spec: DESCRIPTION LICENSE
@@ -77,11 +76,8 @@ DESCRIPTION:
 	) > $@
 
 LICENSE: $(SRC_DIRS)
-	if grep -qi 'LGPL2' $(LICENSE_FILES); then \
-	  echo 'LGPL2' > $@; \
-	else \
-	  exit 2; \
-	fi
+	$(CHECK_LICENSE_FILES)
+	echo LGPL2 > $@
 
 build: $(SRC_DIRS)
 	( \
@@ -96,6 +92,7 @@ build: $(SRC_DIRS)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
         # Using a bind mount appears to be the only way to prevent the build
         # from incorporating $(ROOT) in binary files.
 	$(PKGROOT_BIND_MOUNT)

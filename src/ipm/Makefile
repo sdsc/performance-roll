@@ -63,7 +63,6 @@ include Rules.mk
 include $(SDSCDEVEL)/Pull.mk
 include $(SDSCDEVEL)/Rules.mk
 
-LICENSE_FILES = $(SOURCE_DIR)/COPYING
 MXML_CACHE = $(REDHAT.ROOT)/cache/build-mxml-$(COMPILERNAME)
 PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)
 
@@ -78,11 +77,8 @@ DESCRIPTION:
 	) > $@
 
 LICENSE: $(SRC_DIRS)
-	if grep -qi 'Regents of the University of California' $(LICENSE_FILES); then \
-	  echo 'University of California' > $@; \
-	else \
-	  exit 2; \
-	fi
+	$(CHECK_LICENSE_FILES)
+	echo University of California > $@
 
 build: $(SRC_DIRS)
 	cp patch-files/configure $(SOURCE_DIR)
@@ -107,6 +103,7 @@ build: $(SRC_DIRS)
 	@echo "::: Package $(NAME) build complete :::"
 	
 install::
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	$(PKGROOT_BIND_MOUNT)
 	( \
 	  $(MODULE_LOAD_CC); \

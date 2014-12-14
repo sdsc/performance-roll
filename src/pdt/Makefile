@@ -72,7 +72,6 @@ else ifeq ("$(COMPILERNAME)", "pgi")
   CONFIGURE_FLAGS = -pgCC
 endif
 
-LICENSE_FILES = $(SOURCE_DIR)/LICENSE
 PDT_CACHE = $(REDHAT.ROOT)/cache/build-pdt-$(COMPILERNAME)
 
 $(NAME).spec: DESCRIPTION LICENSE
@@ -85,18 +84,14 @@ DESCRIPTION:
 	) > $@
 
 LICENSE: $(SRC_DIRS)
-	cat $(LICENSE_FILES) | tr '\n' ' ' | \
-	  grep -qi 'Copyright[^a-zA-Z]*University of Oregon'; \
-	if test $$? -eq 0; then \
-	  echo 'University of Oregon' > $@; \
-	else \
-	  exit 2; \
-	fi
+	$(CHECK_LICENSE_FILES)
+	echo University of Oregon > $@
 
 build: $(SRC_DIRS)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
         # Using a bind mount appears to be the only way to prevent the build
         # from incorporating $(ROOT) in binary files.  Also, the configure
 	# script apparently creates installation subdirs, which is why the

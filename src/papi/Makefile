@@ -74,7 +74,6 @@ else ifeq ("$(COMPILERNAME)", "pgi")
   CONFIGURE_FLAGS = -noswitcherror
 endif
 
-LICENSE_FILES = $(SOURCE_DIR)/LICENSE.txt
 PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)
 
 $(NAME).spec: DESCRIPTION LICENSE
@@ -88,11 +87,8 @@ DESCRIPTION:
 	) > $@
 
 LICENSE: $(SRC_DIRS)
-	if grep -qi 'BSD License' $(SOURCE_DIR)/LICENSE.txt; then \
-	  echo 'BSD' > $@; \
-	else \
-	  exit 2; \
-	fi
+	$(CHECK_LICENSE_FILES)
+	echo BSD > $@
 
 build: $(SRC_DIRS)
 	( \
