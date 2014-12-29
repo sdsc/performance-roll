@@ -4,8 +4,8 @@ endif
 COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
 NAME           = sdsc-papi_$(COMPILERNAME)
-VERSION        = 5.3.2
-RELEASE        = 1
+VERSION        = 5.4.0
+RELEASE        = 0
 PKGROOT        = /opt/papi/$(COMPILERNAME)
 
 SRC_SUBDIR     = papi
