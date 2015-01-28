@@ -20,16 +20,16 @@ Copyright (c) 2000 - 2014 The Regents of the University of California.
 All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 </copyright>
 
-<package>ipm_COMPILERNAME_MPINAME</package>
-<package>mxml_COMPILERNAME</package>
-<package>papi_COMPILERNAME</package>
-<package>pdt_COMPILERNAME</package>
-<package>tau_COMPILERNAME_MPINAME</package>
-<package>ipm-modules_COMPILERNAME</package>
-<package>mxml-modules_COMPILERNAME</package>
-<package>papi-modules_COMPILERNAME</package>
-<package>pdt-modules_COMPILERNAME</package>
-<package>tau-modules_COMPILERNAME</package>
-<package>performance-roll-test</package>
+<package>sdsc-ipm_COMPILERNAME_MPINAME</package>
+<package>sdsc-mxml_COMPILERNAME</package>
+<package>sdsc-papi_COMPILERNAME</package>
+<package>sdsc-pdt_COMPILERNAME</package>
+<package>sdsc-tau_COMPILERNAME_MPINAME</package>
+<package>sdsc-ipm-modules_COMPILERNAME</package>
+<package>sdsc-mxml-modules_COMPILERNAME</package>
+<package>sdsc-papi-modules_COMPILERNAME</package>
+<package>sdsc-pdt-modules_COMPILERNAME</package>
+<package>sdsc-tau-modules_COMPILERNAME</package>
+<package>sdsc-performance-roll-test</package>
 
 </kickstart>
