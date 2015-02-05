@@ -73,7 +73,9 @@ else ifeq ("$(COMPILERNAME)", "pgi")
 endif
 
 PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)
+PAPI_INSTALL = /opt/papi/$(COMPILERNAME)
 PDT_CACHE = $(REDHAT.ROOT)/cache/build-pdt-$(COMPILERNAME)
+PDT_INSTALL = /opt/pdt/$(COMPILERNAME)
 
 DESCRIPTION:
 	$(MODULE_LOAD_CC); \
@@ -93,18 +95,24 @@ build: $(SRC_DIRS)
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	# Using a bind mount appears to be the only way to prevent the build
-	# from incorporating $(ROOT) in binary files.
+	# from incorporating $(ROOT) in binary files.  Furthermore, the build
+	# embeds paths to papi and pdt in the tau libs, so we need to bind
+	# mount those.
 	$(PKGROOT_BIND_MOUNT)
+	$(call BIND_MOUNT, $(PAPI_INSTALL), $(PAPI_CACHE))
+	$(call BIND_MOUNT, $(PDT_INSTALL), $(PDT_CACHE))
 	( \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MPI); \
 	  cd $(SOURCE_DIR); \
 	  ./installtau -prefix=$(PKGROOT) -cc=$(CC) -c++=$(CXX) \
 	               -fortran=$(FORTRAN) -mpi -mpiinc=$${MPIHOME}/include \
-	               -mpilib=$${MPIHOME}/lib -papi=$(PAPI_CACHE) \
-	               -pdt=$(PDT_CACHE) -bfd=download \
+	               -mpilib=$${MPIHOME}/lib -papi=$(PAPI_INSTALL) \
+	               -pdt=$(PDT_INSTALL) -bfd=download \
 	)
 	$(PKGROOT_BIND_UMOUNT)
+	$(call BIND_UMOUNT, $(PAPI_INSTALL))
+	$(call BIND_UMOUNT, $(PDT_INSTALL))
 	$(INSTALL_LICENSE_FILES)
 	@echo "::: Package $(NAME) install complete :::"
 
