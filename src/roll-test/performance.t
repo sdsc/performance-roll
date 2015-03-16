@@ -53,6 +53,7 @@ foreach my $compiler (@COMPILERS) {
   foreach my $mpi (@MPIS) {
     open(OUT, ">$TESTFILE-ipm.sh");
     print OUT <<END;
+module unload intel
 module load $compiler $mpi ipm
 mkdir $TESTFILE-ipm.dir
 cd $TESTFILE-ipm.dir
@@ -105,6 +106,7 @@ close(OUT);
 foreach my $compiler (@COMPILERS) {
   open(OUT, ">$TESTFILE-mxml.sh");
   print OUT <<END;
+module unload intel
 module load $compiler mxml;
 $CC{$compiler} -I\$MXML_BASE/include -o $TESTFILE-mxml.exe $TESTFILE-mxml.c -L\$MXML_BASE/lib -lmxml -lpthread
 ./$TESTFILE-mxml.exe
@@ -176,6 +178,7 @@ close(OUT);
 foreach my $compiler (@COMPILERS) {
   open(OUT, ">$TESTFILE.sh");
   print OUT <<END;
+module unload intel
 module load $compiler papi
 $CC{$compiler} -I\$PAPIHOME/include -o $TESTFILE-papi.exe $TESTFILE-papi.c -L\$PAPIHOME/lib -lpapi
 ./$TESTFILE-papi.exe
@@ -229,6 +232,7 @@ foreach my $compiler (@COMPILERS) {
   foreach my $mpi (@MPIS) {
     open(OUT, ">$TESTFILE-tau.sh");
     print OUT <<END;
+module unload intel
 module load $compiler $mpi tau
 mkdir $TESTFILE-tau.dir
 cd $TESTFILE-tau.dir
