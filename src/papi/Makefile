@@ -91,6 +91,7 @@ LICENSE: $(SRC_DIRS)
 	echo BSD > $@
 
 build: $(SRC_DIRS)
+	patch $(SOURCE_DIR)/src/ctests/Makefile.recipies patch-files/Makefile.recipies.patch
 	( \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MPI); \
@@ -110,7 +111,9 @@ install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
 	  cd $(SOURCE_DIR)/src; \
-	  make prefix=$(ROOT)/$(PKGROOT) install \
+	  make prefix=$(ROOT)/$(PKGROOT) install; \
+          cp testlib/libtestlib.a $(ROOT)/$(PKGROOT)/lib; \
+          cp testlib/*.h $(ROOT)/$(PKGROOT)/include \
 	)
 	mkdir -p -m 755 $(PAPI_CACHE)
 	cp -r $(ROOT)/$(PKGROOT)/* $(PAPI_CACHE)/
