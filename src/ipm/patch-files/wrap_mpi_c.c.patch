@@ -1,0 +1,16 @@
+--- ipm-2.0.3/etc/wrap_mpi_c.c	2015-02-05 18:02:20.000000000 -0800
++++ patch-files/wrap_mpi_c.c	2015-03-15 18:40:43.360220260 -0700
+@@ -20,13 +20,7 @@
+ #include "mod_keyhist.h"
+ #endif
+ 
+-#ifndef MPI3CONST
+-#if MPI_VERSION >= 3 
+ #define MPI3CONST const
+-#else
+-#define MPI3CONST 
+-#endif 
+-#endif
+ 
+ 
+ /** HEADER_END **/

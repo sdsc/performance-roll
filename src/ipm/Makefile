@@ -81,24 +81,48 @@ LICENSE: $(SRC_DIRS)
 	echo University of California > $@
 
 build: $(SRC_DIRS)
-	cp patch-files/configure $(SOURCE_DIR)
+	patch $(SOURCE_DIR)/etc/wrap_mpi_c.c patch-files/wrap_mpi_c.c.patch
+	patch $(SOURCE_DIR)/etc/wrap_mpi_f.c patch-files/wrap_mpi_f.c.patch
+	patch $(SOURCE_DIR)/bin/make_wrappers patch-files/make_wrappers.patch
 	( \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MPI); \
 	  cd $(SOURCE_DIR); \
+          libtoolize --force; \
+          aclocal; \
+          autoheader; \
+          automake --force-missing --add-missing; \
+          autoconf; \
 	  export CC=$(CC); \
 	  export F77=$(F77); \
 	  export CXX=$(CXX); \
 	  export LDFLAGS="-L$(MXML_CACHE)/lib -lpthread"; \
-	  export CFLAGS=-I$(MXML_CACHE)/include; \
+	  export CFLAGS=-I$(MXML_CACHE)/include ; \
 	  export CXXFLAGS=-I$(MXML_CACHE)/include; \
 	  export MPIF77=`which mpif77`; \
 	  export MPICC=`which mpicc`; \
 	  export LD_LIBRARY_PATH=$(PAPI_CACHE)/lib:$${LD_LIBRARY_PATH}; \
 	  export MXML_HOME=$(MXML_CACHE); \
+          if [[ "$(MPINAME)" == *"openmpi"* ]] ; then  \
+	      cp ../opal_config.h $${MPIHOME}/include/openmpi; \
+	      mkdir -p $${MPIHOME}/include/openmpi/ompi/mpi/fortran/base; \
+	      cp ../constants.h $${MPIHOME}/include/openmpi/ompi/mpi/fortran/base; \
+              cp ../opal_config_top.h $${MPIHOME}/include; \
+              cp ../opal_config_bottom.h $${MPIHOME}/include; \
+              cp ../ompi_config.h  $${MPIHOME}/include; \
+	      export CFLAGS="$${CFLAGS} -I$${MPIHOME}/include/openmpi"; \
+	      export CXXFLAGS="$${CFLAGS} -I$${MPIHOME}/include/openmpi"; \
+          fi; \
 	  ./configure --prefix=$(PKGROOT) --with-papi=$(PAPI_CACHE) \
 	    --enable-posixio=yes --enable-parser --disable-shared; \
-	  make \
+	  make; \
+          if [[ "$(MPINAME)" == *"openmpi"* ]] ; then  \
+               rm $${MPIHOME}/include/openmpi/opal_config.h; \
+               rm -r $${MPIHOME}/include/openmpi/ompi/mpi/fortran; \
+               rm $${MPIHOME}/include/opal_config_top.h; \
+               rm $${MPIHOME}/include/opal_config_bottom.h; \
+               rm $${MPIHOME}/include/ompi_config.h; \
+          fi \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 	
