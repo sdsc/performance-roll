@@ -115,14 +115,7 @@ build: $(SRC_DIRS)
           fi; \
 	  ./configure --prefix=$(PKGROOT) --with-papi=$(PAPI_CACHE) \
 	    --enable-posixio=yes --enable-parser --disable-shared; \
-	  make; \
-          if [[ "$(MPINAME)" == *"openmpi"* ]] ; then  \
-               rm $${MPIHOME}/include/openmpi/opal_config.h; \
-               rm -r $${MPIHOME}/include/openmpi/ompi/mpi/fortran; \
-               rm $${MPIHOME}/include/opal_config_top.h; \
-               rm $${MPIHOME}/include/opal_config_bottom.h; \
-               rm $${MPIHOME}/include/ompi_config.h; \
-          fi \
+	  make \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 	
@@ -133,7 +126,14 @@ install::
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MPI); \
 	  cd $(SOURCE_DIR); \
-	  make install \
+	  make install; \
+          if [[ "$(MPINAME)" == *"openmpi"* ]] ; then  \
+               rm $${MPIHOME}/include/openmpi/opal_config.h; \
+               rm -r $${MPIHOME}/include/openmpi/ompi/mpi/fortran; \
+               rm $${MPIHOME}/include/opal_config_top.h; \
+               rm $${MPIHOME}/include/opal_config_bottom.h; \
+               rm $${MPIHOME}/include/ompi_config.h; \
+          fi \
 	)
 	$(PKGROOT_BIND_UMOUNT)
 	$(INSTALL_LICENSE_FILES)
