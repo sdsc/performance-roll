@@ -147,80 +147,80 @@ int max_events=0;
 double
 loop( long n )
 {
-	long i;
-	double a = 0.0012;
+   long i;
+   double a = 0.0012;
 
-	for ( i = 0; i < n; i++ ) {
-		a += 0.01;
-	}
-	return a;
+   for ( i = 0; i < n; i++ ) {
+      a += 0.01;
+   }
+   return a;
 }
 
 void *
 thread( void *arg )
 {
-	( void ) arg;			 /*unused */
-	int eventset = PAPI_NULL;
-	long long *values;
+   ( void ) arg; /*unused */
+   int eventset = PAPI_NULL;
+   long long *values;
 
-	int ret = PAPI_register_thread(  );
-	if ( ret != PAPI_OK )
-		test_fail( __FILE__, __LINE__, "PAPI_register_thread", ret );
-	ret = PAPI_create_eventset( &eventset );
-	if ( ret != PAPI_OK )
-		test_fail( __FILE__, __LINE__, "PAPI_create_eventset", ret );
+   int ret = PAPI_register_thread(  );
+   if ( ret != PAPI_OK )
+      test_fail( __FILE__, __LINE__, "PAPI_register_thread", ret );
+   ret = PAPI_create_eventset( &eventset );
+   if ( ret != PAPI_OK )
+      test_fail( __FILE__, __LINE__, "PAPI_create_eventset", ret );
 
-	values=calloc(max_events,sizeof(long long));
+   values=calloc(max_events,sizeof(long long));
 
-	printf( "Event set %d created\n", eventset );
+   printf( "Event set %d created\\n", eventset );
 
-	/* In Component PAPI, EventSets must be assigned a component index
-	   before you can fiddle with their internals.
-	   0 is always the cpu component */
-	ret = PAPI_assign_eventset_component( eventset, 0 );
-	if ( ret != PAPI_OK ) {
-		test_fail( __FILE__, __LINE__, "PAPI_assign_eventset_component", ret );
-	}
+/* In Component PAPI, EventSets must be assigned a component index
+   before you can fiddle with their internals.
+   0 is always the cpu component */
+   ret = PAPI_assign_eventset_component( eventset, 0 );
+   if ( ret != PAPI_OK ) {
+      test_fail( __FILE__, __LINE__, "PAPI_assign_eventset_component", ret );
+   }
 
-	ret = PAPI_set_multiplex( eventset );
-        if ( ret == PAPI_ENOSUPP) {
-	   test_skip( __FILE__, __LINE__, "Multiplexing not supported", 1 );
-	}
-	else if ( ret != PAPI_OK ) {
-		test_fail( __FILE__, __LINE__, "PAPI_set_multiplex", ret );
-	}
+   ret = PAPI_set_multiplex( eventset );
+   if ( ret == PAPI_ENOSUPP) {
+       test_skip( __FILE__, __LINE__, "Multiplexing not supported", 1 );
+   }
+   else if ( ret != PAPI_OK ) {
+       test_fail( __FILE__, __LINE__, "PAPI_set_multiplex", ret );
+   }
 
-	ret = PAPI_add_events( eventset, events, numevents );
-	if ( ret < PAPI_OK ) {
-		test_fail( __FILE__, __LINE__, "PAPI_add_events", ret );
-	}
+   ret = PAPI_add_events( eventset, events, numevents );
+   if ( ret < PAPI_OK ) {
+      test_fail( __FILE__, __LINE__, "PAPI_add_events", ret );
+   }
 
-	ret = PAPI_start( eventset );
-	if ( ret != PAPI_OK ) {
-		test_fail( __FILE__, __LINE__, "PAPI_start", ret );
-	}
+   ret = PAPI_start( eventset );
+   if ( ret != PAPI_OK ) {
+      test_fail( __FILE__, __LINE__, "PAPI_start", ret );
+   }
 
-	do_stuff(  );
+   do_stuff(  );
 
-	ret = PAPI_stop( eventset, values );
-	if ( ret != PAPI_OK ) {
-		test_fail( __FILE__, __LINE__, "PAPI_stop", ret );
-	}
+   ret = PAPI_stop( eventset, values );
+   if ( ret != PAPI_OK ) {
+      test_fail( __FILE__, __LINE__, "PAPI_stop", ret );
+   }
 
-	ret = PAPI_cleanup_eventset( eventset );
-	if ( ret != PAPI_OK ) {
-		test_fail( __FILE__, __LINE__, "PAPI_cleanup_eventset", ret );
-	}
+   ret = PAPI_cleanup_eventset( eventset );
+   if ( ret != PAPI_OK ) {
+      test_fail( __FILE__, __LINE__, "PAPI_cleanup_eventset", ret );
+   }
 
-	ret = PAPI_destroy_eventset( &eventset );
-	if ( ret != PAPI_OK ) {
-		test_fail( __FILE__, __LINE__, "PAPI_destroy_eventset", ret );
-	}
+   ret = PAPI_destroy_eventset( &eventset );
+   if ( ret != PAPI_OK ) {
+      test_fail( __FILE__, __LINE__, "PAPI_destroy_eventset", ret );
+   }
 
-	ret = PAPI_unregister_thread(  );
-	if ( ret != PAPI_OK )
-		test_fail( __FILE__, __LINE__, "PAPI_unregister_thread", ret );
-	return ( NULL );
+   ret = PAPI_unregister_thread(  );
+   if ( ret != PAPI_OK )
+      test_fail( __FILE__, __LINE__, "PAPI_unregister_thread", ret );
+   return ( NULL );
 }
 
 int
@@ -282,19 +282,19 @@ main( int argc, char **argv )
 		if ( PAPI_get_event_info( i, &info ) == PAPI_OK ) {
 			if ( info.count == 1 ) {
 				events[numevents++] = ( int ) info.event_code;
-				printf( "Added %s\n", info.symbol );
+				printf( "Added %s\\n", info.symbol );
 			} else {
-				printf( "Skipping derived event %s\n", info.symbol );
+				printf( "Skipping derived event %s\\n", info.symbol );
 			}
 		}
 	} while ( ( PAPI_enum_event( &i, PAPI_PRESET_ENUM_AVAIL ) == PAPI_OK )
 			  && ( numevents < max_events ) );
 
-	printf( "Found %d events\n", numevents );
+	printf( "Found %d events\\n", numevents );
 
 	do_stuff(  );
 
-	printf( "Creating %d threads:\n", nthreads );
+	printf( "Creating %d threads:\\n", nthreads );
 
 	threads =
 		( pthread_t * ) malloc( ( size_t ) nthreads * sizeof ( pthread_t ) );
