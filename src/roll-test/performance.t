@@ -126,7 +126,7 @@ SKIP: {
   skip 'papi not installed', 1 if ! -d $packageHome;
 
   open(OUT, ">$TESTFILE-papi.c");
-  print OUT <<END;
+  print OUT <<'END';
 /* 
 * File:    multiplex1_pthreads.c
 * Author:  Rick Kufrin
@@ -172,7 +172,7 @@ thread( void *arg )
 
    values=calloc(max_events,sizeof(long long));
 
-   printf( "Event set %d created\\n", eventset );
+   printf( "Event set %d created\n", eventset );
 
 /* In Component PAPI, EventSets must be assigned a component index
    before you can fiddle with their internals.
@@ -282,19 +282,19 @@ main( int argc, char **argv )
 		if ( PAPI_get_event_info( i, &info ) == PAPI_OK ) {
 			if ( info.count == 1 ) {
 				events[numevents++] = ( int ) info.event_code;
-				printf( "Added %s\\n", info.symbol );
+				printf( "Added %s\n", info.symbol );
 			} else {
-				printf( "Skipping derived event %s\\n", info.symbol );
+				printf( "Skipping derived event %s\n", info.symbol );
 			}
 		}
 	} while ( ( PAPI_enum_event( &i, PAPI_PRESET_ENUM_AVAIL ) == PAPI_OK )
 			  && ( numevents < max_events ) );
 
-	printf( "Found %d events\\n", numevents );
+	printf( "Found %d events\n", numevents );
 
 	do_stuff(  );
 
-	printf( "Creating %d threads:\\n", nthreads );
+	printf( "Creating %d threads:\n", nthreads );
 
 	threads =
 		( pthread_t * ) malloc( ( size_t ) nthreads * sizeof ( pthread_t ) );
