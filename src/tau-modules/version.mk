@@ -2,7 +2,7 @@ PACKAGE     = tau
 CATEGORY    = applications
 
 NAME        = sdsc-$(PACKAGE)-modules_$(ROLLCOMPILER)
-RELEASE     = 3
+RELEASE     = 4
 PKGROOT     = /opt/modulefiles/$(CATEGORY)/.$(ROLLCOMPILER)/$(PACKAGE)
 
 VERSION_SRC = $(REDHAT.ROOT)/src/$(PACKAGE)/version.mk

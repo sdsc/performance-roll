@@ -70,6 +70,10 @@ END
     like($output, qr/wallclock\s*:\s*\d+/, 'ipm sample output');
     `rm -rf $TESTFILE-ipm.dir $TESTFILE-ipm.sh`;
   }
+  $output = `module load $compiler ipm; echo \$IPMHOME 2>&1`;
+  my $firstmpi = $MPIS[0];
+  $firstmpi =~ s#/.*##;
+  like($output, qr#/opt/ipm/$compiler/$firstmpi#, 'ipm modulefile defaults to first mpi');
 }
 
 }
@@ -401,6 +405,10 @@ END
     like($output, qr/3 done/, "tau sample run with $compiler $mpi");
     `rm -rf $TESTFILE-tau.dir $TESTFILE-tau.sh`;
   }
+  $output = `module load $compiler tau; echo \$TAUHOME 2>&1`;
+  my $firstmpi = $MPIS[0];
+  $firstmpi =~ s#/.*##;
+  like($output, qr#/opt/tau/$compiler/$firstmpi#, 'tau modulefile defaults to first mpi');
 }
 
 }
