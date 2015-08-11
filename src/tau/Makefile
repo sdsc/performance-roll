@@ -108,7 +108,7 @@ install::
 	  ./installtau -prefix=$(PKGROOT) -cc=$(CC) -c++=$(CXX) \
 	               -fortran=$(FORTRAN) -mpi -mpiinc=$${MPIHOME}/include \
 	               -mpilib=$${MPIHOME}/lib -papi=$(PAPI_INSTALL) \
-	               -pdt=$(PDT_INSTALL) -bfd=/opt/gnu \
+	               -pdt=$(PDT_INSTALL) -bfd=$(GCCHOME) \
 	)
 	$(PKGROOT_BIND_UMOUNT)
 	$(call BIND_UMOUNT, $(PAPI_INSTALL))
