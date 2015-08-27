@@ -1,11 +1,11 @@
---- ipm-2.0.3/bin/make_wrappers	2015-02-05 18:02:20.000000000 -0800
-+++ patch-files/make_wrappers	2015-03-15 18:48:12.175980111 -0700
+--- make_wrappers	2015-08-26 14:45:51.000000000 -0700
++++ patch-files/make_wrappers	2015-08-26 14:46:53.000000000 -0700
 @@ -118,7 +118,7 @@
   $call{$id}{car} =~ s/\(//;
   $call{$id}{car} =~ s/\)//;
  
 - $call{$id}{cai} =~ s/const/MPI3CONST/g;
-+#$call{$id}{cai} =~ s/const/MPI3CONST/g;
++ $call{$id}{cai} =~ s/const //g if $call{$id}{cai} =~ /MPI_/;
  	
  #
  # cufft
