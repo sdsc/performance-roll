@@ -82,17 +82,16 @@ LICENSE: $(SRC_DIRS)
 
 build: $(SRC_DIRS)
 	patch $(SOURCE_DIR)/etc/wrap_mpi_c.c patch-files/wrap_mpi_c.c.patch
-	patch $(SOURCE_DIR)/etc/wrap_mpi_f.c patch-files/wrap_mpi_f.c.patch
 	patch $(SOURCE_DIR)/bin/make_wrappers patch-files/make_wrappers.patch
 	( \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MPI); \
 	  cd $(SOURCE_DIR); \
-          libtoolize --force; \
-          aclocal; \
-          autoheader; \
-          automake --force-missing --add-missing; \
-          autoconf; \
+	  libtoolize --force; \
+	  aclocal; \
+	  autoheader; \
+	  automake --force-missing --add-missing; \
+	  autoconf; \
 	  export CC=$(CC); \
 	  export F77=$(F77); \
 	  export CXX=$(CXX); \
@@ -103,16 +102,12 @@ build: $(SRC_DIRS)
 	  export MPICC=`which mpicc`; \
 	  export LD_LIBRARY_PATH=$(PAPI_CACHE)/lib:$${LD_LIBRARY_PATH}; \
 	  export MXML_HOME=$(MXML_CACHE); \
-          if [[ "$(MPINAME)" == *"openmpi"* ]] ; then  \
-	      cp ../opal_config.h $${MPIHOME}/include/openmpi; \
-	      mkdir -p $${MPIHOME}/include/openmpi/ompi/mpi/fortran/base; \
-	      cp ../constants.h $${MPIHOME}/include/openmpi/ompi/mpi/fortran/base; \
-              cp ../opal_config_top.h $${MPIHOME}/include; \
-              cp ../opal_config_bottom.h $${MPIHOME}/include; \
-              cp ../ompi_config.h  $${MPIHOME}/include; \
-	      export CFLAGS="$${CFLAGS} -I$${MPIHOME}/include/openmpi"; \
-	      export CXXFLAGS="$${CFLAGS} -I$${MPIHOME}/include/openmpi"; \
-          fi; \
+	  mkdir -p `pwd`/openmpi/ompi/mpi/f77; \
+	  cp ../*.h .; \
+	  cp ../*.h openmpi/; \
+	  cp ../constants.h openmpi/ompi/mpi/f77/; \
+	  export CFLAGS="$${CFLAGS} -I`pwd`"; \
+	  export CXXFLAGS="$${CFLAGS} -I`pwd`"; \
 	  ./configure --prefix=$(PKGROOT) --with-papi=$(PAPI_CACHE) \
 	    --enable-posixio=yes --enable-parser --disable-shared; \
 	  make \
@@ -126,14 +121,7 @@ install::
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MPI); \
 	  cd $(SOURCE_DIR); \
-	  make install; \
-          if [[ "$(MPINAME)" == *"openmpi"* ]] ; then  \
-               rm $${MPIHOME}/include/openmpi/opal_config.h; \
-               rm -r $${MPIHOME}/include/openmpi/ompi/mpi/fortran; \
-               rm $${MPIHOME}/include/opal_config_top.h; \
-               rm $${MPIHOME}/include/opal_config_bottom.h; \
-               rm $${MPIHOME}/include/ompi_config.h; \
-          fi \
+	  make install \
 	)
 	$(PKGROOT_BIND_UMOUNT)
 	$(INSTALL_LICENSE_FILES)
