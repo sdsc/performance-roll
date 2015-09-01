@@ -392,7 +392,11 @@ module load $compiler $mpi tau
 mkdir $TESTFILE-tau.dir
 cd $TESTFILE-tau.dir
 cp -r \$TAU_BASE/examples/taucompiler/c/* .
-export TAU_MAKEFILE=\$TAU_BASE/x86_64/lib/Makefile.tau-$CXX{$compiler}-papi-mpi-pdt
+if test "$compiler" = "gnu"; then
+  export TAU_MAKEFILE=\$TAU_BASE/x86_64/lib/Makefile.tau-papi-mpi-pdt
+else
+  export TAU_MAKEFILE=\$TAU_BASE/x86_64/lib/Makefile.tau-$CXX{$compiler}-papi-mpi-pdt
+fi
 make
 output=`mpirun -np 4 ./ring 2>&1`
 if [[ "\$output" =~ "run-as-root" ]]; then
