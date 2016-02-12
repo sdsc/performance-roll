@@ -113,7 +113,8 @@ install::
 	  cd $(SOURCE_DIR)/src; \
 	  make prefix=$(ROOT)/$(PKGROOT) install; \
           cp testlib/libtestlib.a $(ROOT)/$(PKGROOT)/lib; \
-          cp testlib/*.h $(ROOT)/$(PKGROOT)/include \
+          cp testlib/*.h $(ROOT)/$(PKGROOT)/include; \
+          chmod 0664 $(ROOT)/$(PKGROOT)/include/*.h; \
 	)
 	mkdir -p -m 755 $(PAPI_CACHE)
 	cp -r $(ROOT)/$(PKGROOT)/* $(PAPI_CACHE)/
