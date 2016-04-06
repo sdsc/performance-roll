@@ -10,7 +10,7 @@ MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
 NAME           = sdsc-tau_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 2.23
-RELEASE        = 3
+RELEASE        = 4
 PKGROOT        = /opt/tau/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = tau
