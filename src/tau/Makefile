@@ -90,6 +90,13 @@ LICENSE: $(SRC_DIRS)
 	echo University of Oregon > $@
 
 build: $(SRC_DIRS)
+	( \
+	   $(MODULE_LOAD_CC); \
+           cd $(BINUTILS_SOURCE_DIR); \
+	   ./configure CFLAGS=-fPIC CXXFLAGS=-fPIC --prefix=$(BINUTILS_SOURCE) --disable-nls --disable-werror; \
+           make; \
+           make install \
+        )
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
@@ -108,7 +115,7 @@ install::
 	  ./installtau -prefix=$(PKGROOT) -cc=$(CC) -c++=$(CXX) \
 	               -fortran=$(FORTRAN) -mpi -mpiinc=$${MPIHOME}/include \
 	               -mpilib=$${MPIHOME}/lib -papi=$(PAPI_INSTALL) \
-	               -pdt=$(PDT_INSTALL) -bfd=download \
+	               -pdt=$(PDT_INSTALL) -bfd=$(BINUTILS_SOURCE) \
 	)
 	$(PKGROOT_BIND_UMOUNT)
 	$(call BIND_UMOUNT, $(PAPI_INSTALL))
@@ -117,4 +124,4 @@ install::
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR) DESCRIPTION LICENSE
+	rm -rf $(SOURCE_DIR) $(BINUTILS_SOURCE_DIR) DESCRIPTION LICENSE
