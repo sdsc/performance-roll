@@ -76,6 +76,7 @@ PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)
 PAPI_INSTALL = /opt/papi/$(COMPILERNAME)
 PDT_CACHE = $(REDHAT.ROOT)/cache/build-pdt-$(COMPILERNAME)
 PDT_INSTALL = /opt/pdt/$(COMPILERNAME)
+BINUTILS_CACHE = $(REDHAT.ROOT)/cache/build-binutils
 
 DESCRIPTION:
 	$(MODULE_LOAD_CC); \
@@ -90,13 +91,7 @@ LICENSE: $(SRC_DIRS)
 	echo University of Oregon > $@
 
 build: $(SRC_DIRS)
-	( \
-	   $(MODULE_LOAD_CC); \
-           cd $(BINUTILS_SOURCE_DIR); \
-	   ./configure CFLAGS=-fPIC CXXFLAGS=-fPIC --prefix=$(BINUTILS_SOURCE) --disable-nls --disable-werror; \
-           make; \
-           make install \
-        )
+	patch $(SOURCE_DIR)/configure patch-files/configure.patch
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
@@ -115,7 +110,7 @@ install::
 	  ./installtau -prefix=$(PKGROOT) -cc=$(CC) -c++=$(CXX) \
 	               -fortran=$(FORTRAN) -mpi -mpiinc=$${MPIHOME}/include \
 	               -mpilib=$${MPIHOME}/lib -papi=$(PAPI_INSTALL) \
-	               -pdt=$(PDT_INSTALL) -bfd=$(BINUTILS_SOURCE) \
+	               -pdt=$(PDT_INSTALL) \
 	)
 	$(PKGROOT_BIND_UMOUNT)
 	$(call BIND_UMOUNT, $(PAPI_INSTALL))
