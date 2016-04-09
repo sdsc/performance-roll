@@ -76,6 +76,7 @@ PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)
 PAPI_INSTALL = /opt/papi/$(COMPILERNAME)
 PDT_CACHE = $(REDHAT.ROOT)/cache/build-pdt-$(COMPILERNAME)
 PDT_INSTALL = /opt/pdt/$(COMPILERNAME)
+BINUTILS_CACHE = $(REDHAT.ROOT)/cache/build-binutils
 
 DESCRIPTION:
 	$(MODULE_LOAD_CC); \
@@ -90,6 +91,7 @@ LICENSE: $(SRC_DIRS)
 	echo University of Oregon > $@
 
 build: $(SRC_DIRS)
+	patch $(SOURCE_DIR)/configure patch-files/configure.patch
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
@@ -108,7 +110,7 @@ install::
 	  ./installtau -prefix=$(PKGROOT) -cc=$(CC) -c++=$(CXX) \
 	               -fortran=$(FORTRAN) -mpi -mpiinc=$${MPIHOME}/include \
 	               -mpilib=$${MPIHOME}/lib -papi=$(PAPI_INSTALL) \
-	               -pdt=$(PDT_INSTALL) -bfd=$(GCCHOME) \
+	               -pdt=$(PDT_INSTALL) \
 	)
 	$(PKGROOT_BIND_UMOUNT)
 	$(call BIND_UMOUNT, $(PAPI_INSTALL))
@@ -117,4 +119,4 @@ install::
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR) DESCRIPTION LICENSE
+	rm -rf $(SOURCE_DIR) $(BINUTILS_SOURCE_DIR) DESCRIPTION LICENSE
