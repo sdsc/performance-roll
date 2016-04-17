@@ -1,0 +1,23 @@
+--- tau-2.23/configure	2013-11-14 18:31:25.000000000 -0800
++++ patch-files/configure	2016-04-08 17:26:45.859938805 -0700
+@@ -686,8 +686,8 @@
+ enable_export_dynamic=no
+ perfsuite=no
+ perfsuitedir=
+-bfd=no
+-bfddir=
++bfd=yes
++bfddir=download
+ turnbfdoff=no
+ perf=no
+ perfincdir=
+@@ -6515,7 +6515,8 @@
+ ######################################################################
+ binutils=binutils-2.23.2
+ binutilstgz=$binutils.tar.gz
+-binutilsurl=http://www.cs.uoregon.edu/research/paracomp/tau/tauprofile/dist/$binutilstgz
++#binutilsurl=http://www.cs.uoregon.edu/research/paracomp/tau/tauprofile/dist/$binutilstgz
++binutilsurl=https://forge.sdsc.edu/triton/performance/src/tau/$binutilstgz
+ if [ "x$bfddir" = xnone ]; then
+     echo "BFD disabled."
+     turnbfdoff=yes
