@@ -80,7 +80,7 @@ DESCRIPTION:
 	$(MODULE_LOAD_CC); \
 	( \
 	  $(DESCRIBE_PKG); \
-	  $(DESCRIBE_C) \
+	  $(DESCRIBE_CC) \
 	) > $@
 
 LICENSE: $(SRC_DIRS)
