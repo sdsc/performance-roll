@@ -397,6 +397,11 @@ if test "$compiler" = "gnu"; then
 else
   export TAU_MAKEFILE=\$TAU_BASE/x86_64/lib/Makefile.tau-$CXX{$compiler}-papi-mpi-pdt
 fi
+if test -n "\$TAU_OPTIONS"; then
+  export TAU_OPTIONS="\$TAU_OPTIONS -optRevert"
+else
+  export TAU_OPTIONS="-optRevert"
+fi
 make
 output=`mpirun -np 4 ./ring 2>&1`
 if [[ "\$output" =~ "run-as-root" ]]; then
