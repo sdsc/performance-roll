@@ -1,11 +1,11 @@
---- make_wrappers	2017-05-29 14:42:10.000000000 -0700
-+++ patch-files/make_wrappers	2017-05-29 15:41:51.000000000 -0700
+--- make_wrappers	2017-05-30 18:48:13.000000000 -0700
++++ patch-files/make_wrappers	2017-05-30 18:48:40.000000000 -0700
 @@ -118,7 +118,7 @@
   $call{$id}{car} =~ s/\(//;
   $call{$id}{car} =~ s/\)//;
  
 - $call{$id}{cai} =~ s/const/MPI3CONST/g;
-+ $call{$id}{cai} =~ s/MPI3CONST/const/g;
++ $call{$id}{cai} =~ s/const/MPI3CONST/g if $call{$id}{cai} =~ /MPI_/;
  	
  #
  # cufft

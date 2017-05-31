@@ -10,7 +10,7 @@ MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
 NAME           = sdsc-ipm_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 2.0.3
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/ipm/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = ipm
