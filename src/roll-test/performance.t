@@ -427,14 +427,12 @@ SKIP: {
   skip 'performance not installed', 1
     if $appliance !~ /$installedOnAppliancesPattern/;
   foreach my $package(@packages) {
-     foreach my $compiler (@COMPILERS) {
-       `/bin/ls /opt/modulefiles/applications/.${compiler}/$package/[0-9]* 2>&1`;
-       ok($? == 0, "$package module installed for the $compiler compiler");
-       `/bin/ls /opt/modulefiles/applications/.${compiler}/$package/.version.[0-9]* 2>&1`;
-       ok($? == 0, "$package version module installed for the $compiler compiler");
-       ok(-l "/opt/modulefiles/applications/.${compiler}/$package/.version",
-       "$package version module link created for the $compiler compiler");
-     }
+    `/bin/ls /opt/modulefiles/applications/$package/[0-9]* 2>&1`;
+    ok($? == 0, "$package module installed");
+    `/bin/ls /opt/modulefiles/applications/$package/.version.[0-9]* 2>&1`;
+    ok($? == 0, "$package version module installed");
+    ok(-l "/opt/modulefiles/applications/$package/.version",
+    "$package version module link created");
   }
 }
 

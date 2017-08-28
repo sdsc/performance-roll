@@ -25,11 +25,11 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 <package>sdsc-papi_COMPILERNAME</package>
 <package>sdsc-pdt_COMPILERNAME</package>
 <package>sdsc-tau_COMPILERNAME_MPINAME</package>
-<package>sdsc-ipm-modules_COMPILERNAME</package>
-<package>sdsc-mxml-modules_COMPILERNAME</package>
-<package>sdsc-papi-modules_COMPILERNAME</package>
-<package>sdsc-pdt-modules_COMPILERNAME</package>
-<package>sdsc-tau-modules_COMPILERNAME</package>
+<package>sdsc-ipm-modules</package>
+<package>sdsc-mxml-modules</package>
+<package>sdsc-papi-modules</package>
+<package>sdsc-pdt-modules</package>
+<package>sdsc-tau-modules</package>
 <package>sdsc-performance-roll-test</package>
 
 </kickstart>
