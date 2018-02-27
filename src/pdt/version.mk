@@ -5,7 +5,7 @@ COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
 NAME           = sdsc-pdt_$(ROLLCOMPILER)
 VERSION        = 3.20
-RELEASE        = 3
+RELEASE        = 4
 PKGROOT        = /opt/pdt/$(ROLLCOMPILER)
 
 SRC_SUBDIR     = pdt
@@ -18,4 +18,5 @@ SOURCE_DIR     = $(SOURCE_PKG:%.$(SOURCE_SUFFIX)=%)
 
 TGZ_PKGS       = $(SOURCE_PKG)
 
-RPM.EXTRAS     = AutoReq:No
+RPM.EXTRAS     = AutoReq:No\nAutoProv:No
+RPM.PREFIX     = $(PKGROOT)
