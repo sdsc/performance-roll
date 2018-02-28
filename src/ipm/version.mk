@@ -10,7 +10,7 @@ MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
 NAME           = sdsc-ipm_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 2.0.3
-RELEASE        = 2
+RELEASE        = 3
 PKGROOT        = /opt/ipm/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = ipm
@@ -23,4 +23,5 @@ SOURCE_DIR     = $(SOURCE_PKG:%.$(SOURCE_SUFFIX)=%)
 
 TAR_GZ_PKGS    = $(SOURCE_PKG)
 
-RPM.EXTRAS     = AutoReq:No
+RPM.EXTRAS     = AutoReq:No\nAutoProv:No
+RPM.PREFIX     = $(PKGROOT)

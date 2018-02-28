@@ -5,7 +5,7 @@ COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
 NAME           = sdsc-mxml_$(COMPILERNAME)
 VERSION        = 2.9
-RELEASE        = 0
+RELEASE        = 1
 PKGROOT        = /opt/mxml/$(COMPILERNAME)
 
 SRC_SUBDIR     = mxml
@@ -18,4 +18,5 @@ SOURCE_DIR     = $(SOURCE_PKG:%.$(SOURCE_SUFFIX)=%)
 
 TAR_GZ_PKGS    = $(SOURCE_PKG)
 
-RPM.EXTRAS     = AutoReq:No
+RPM.EXTRAS     = AutoReq:No\nAutoProv:No
+RPM.PREFIX     = $(PKGROOT)
