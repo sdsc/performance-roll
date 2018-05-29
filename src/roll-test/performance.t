@@ -57,7 +57,7 @@ module unload intel
 module load $compiler $mpi ipm
 mkdir $TESTFILE-ipm.dir
 cd $TESTFILE-ipm.dir
-mpicc ../$TESTFILE-ipm.c -L\$IPMHOME/lib -lipm -L\$PAPIHOME/lib -lpapi
+mpicc ../$TESTFILE-ipm.c -L\$IPMHOME/lib -lipm -L\$PAPIHOME/lib -lpapi -ldl
 output=`mpirun -np 4 ./a.out 2>&1`
 if [[ "\$output" =~ "run-as-root" ]]; then
   output=`mpirun --allow-run-as-root -np 4 ./a.out 2>&1`
