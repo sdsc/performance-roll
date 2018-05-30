@@ -91,6 +91,7 @@ LICENSE: $(SRC_DIRS)
 
 build: $(SRC_DIRS)
 	patch $(SOURCE_DIR)/src/ctests/Makefile.recipies patch-files/Makefile.recipies.patch
+	patch $(SOURCE_DIR)/src/configure patch-files/configure.patch
 	( \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MPI); \
