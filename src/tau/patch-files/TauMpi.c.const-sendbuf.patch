@@ -1,0 +1,11 @@
+--- TauMpi.c	2018-05-29 12:06:27.630756101 -0700
++++ patch-files/TauMpi.c	2018-05-29 18:02:42.064412677 -0700
+@@ -47,7 +47,7 @@
+ #ifdef TAU_MPICH3
+ #define TAU_MPICH3_CONST const
+ #else
+-#define TAU_MPICH3_CONST 
++#define TAU_MPICH3_CONST const
+ #endif
+ 
+ void TauSyncClocks();

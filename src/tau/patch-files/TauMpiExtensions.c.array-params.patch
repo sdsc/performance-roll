@@ -1,0 +1,272 @@
+--- TauMpiExtensions.c	2018-05-29 12:06:27.630756101 -0700
++++ patch-files/TauMpiExtensions.c	2018-05-30 10:17:45.185209767 -0700
+@@ -138,7 +138,7 @@
+ /******************************************************
+ ***      MPI_Type_get_contents wrapper function 
+ ******************************************************/
+-int MPI_Type_get_contents( MPI_Datatype datatype, int max_integers, int max_addresses, int max_datatypes, int * array_of_integers, MPI_Aint * array_of_addresses, MPI_Datatype * array_of_datatypes)
++int MPI_Type_get_contents( MPI_Datatype datatype, int max_integers, int max_addresses, int max_datatypes, int array_of_integers[], MPI_Aint array_of_addresses[], MPI_Datatype array_of_datatypes[])
+ {
+   int retvalue; 
+   TAU_PROFILE_TIMER(t, "MPI_Type_get_contents()", "", TAU_MESSAGE); 
+@@ -151,7 +151,7 @@
+ /******************************************************
+ ***      MPI_Type_get_contents wrapper function 
+ ******************************************************/
+-void MPI_TYPE_GET_CONTENTS( MPI_Fint *  datatype, MPI_Fint *  max_integers, MPI_Fint *  max_addresses, MPI_Fint *  max_datatypes, MPI_Fint *  array_of_integers, MPI_Aint * array_of_addresses, MPI_Fint * array_of_datatypes, MPI_Fint * ierr)
++void MPI_TYPE_GET_CONTENTS( MPI_Fint *  datatype, MPI_Fint *  max_integers, MPI_Fint *  max_addresses, MPI_Fint *  max_datatypes, MPI_Fint array_of_integers[], MPI_Aint array_of_addresses[], MPI_Fint array_of_datatypes[], MPI_Fint * ierr)
+ {
+   TAU_DECL_ALLOC_LOCAL(MPI_Datatype, local_types, *max_datatypes);
+   *ierr = MPI_Type_get_contents( MPI_Type_f2c(*datatype), *max_integers, *max_addresses, *max_datatypes, array_of_integers, array_of_addresses, local_types) ; 
+@@ -162,7 +162,7 @@
+ /******************************************************
+ ***      MPI_Type_get_contents wrapper function 
+ ******************************************************/
+-void mpi_type_get_contents( MPI_Fint *  datatype, MPI_Fint *  max_integers, MPI_Fint *  max_addresses, MPI_Fint *  max_datatypes, MPI_Fint *  array_of_integers, MPI_Aint * array_of_addresses, MPI_Fint * array_of_datatypes, MPI_Fint * ierr)
++void mpi_type_get_contents( MPI_Fint *  datatype, MPI_Fint *  max_integers, MPI_Fint *  max_addresses, MPI_Fint *  max_datatypes, MPI_Fint array_of_integers[], MPI_Aint array_of_addresses[], MPI_Fint array_of_datatypes[], MPI_Fint * ierr)
+ {
+   MPI_TYPE_GET_CONTENTS( datatype, max_integers, max_addresses, max_datatypes, array_of_integers, array_of_addresses, array_of_datatypes, ierr) ; 
+   return ; 
+@@ -171,7 +171,7 @@
+ /******************************************************
+ ***      MPI_Type_get_contents wrapper function 
+ ******************************************************/
+-void mpi_type_get_contents_( MPI_Fint *  datatype, MPI_Fint *  max_integers, MPI_Fint *  max_addresses, MPI_Fint *  max_datatypes, MPI_Fint *  array_of_integers, MPI_Aint * array_of_addresses, MPI_Fint * array_of_datatypes, MPI_Fint * ierr)
++void mpi_type_get_contents_( MPI_Fint *  datatype, MPI_Fint *  max_integers, MPI_Fint *  max_addresses, MPI_Fint *  max_datatypes, MPI_Fint array_of_integers[], MPI_Aint array_of_addresses[], MPI_Fint array_of_datatypes[], MPI_Fint * ierr)
+ {
+   MPI_TYPE_GET_CONTENTS( datatype, max_integers, max_addresses, max_datatypes, array_of_integers, array_of_addresses, array_of_datatypes, ierr) ; 
+   return ; 
+@@ -180,7 +180,7 @@
+ /******************************************************
+ ***      MPI_Type_get_contents wrapper function 
+ ******************************************************/
+-void mpi_type_get_contents__( MPI_Fint *  datatype, MPI_Fint *  max_integers, MPI_Fint *  max_addresses, MPI_Fint *  max_datatypes, MPI_Fint *  array_of_integers, MPI_Aint * array_of_addresses, MPI_Fint * array_of_datatypes, MPI_Fint * ierr)
++void mpi_type_get_contents__( MPI_Fint *  datatype, MPI_Fint *  max_integers, MPI_Fint *  max_addresses, MPI_Fint *  max_datatypes, MPI_Fint array_of_integers[], MPI_Aint array_of_addresses[], MPI_Fint array_of_datatypes[], MPI_Fint * ierr)
+ {
+   MPI_TYPE_GET_CONTENTS( datatype, max_integers, max_addresses, max_datatypes, array_of_integers, array_of_addresses, array_of_datatypes, ierr) ; 
+   return ; 
+@@ -522,7 +522,7 @@
+ /******************************************************
+ ***      MPI_Type_create_hindexed wrapper function 
+ ******************************************************/
+-int MPI_Type_create_hindexed( int count, TAU_MPICH3_CONST int * array_of_blocklengths, TAU_MPICH3_CONST MPI_Aint * array_of_displacements, MPI_Datatype oldtype, MPI_Datatype * newtype)
++int MPI_Type_create_hindexed( int count, TAU_MPICH3_CONST int array_of_blocklengths[], TAU_MPICH3_CONST MPI_Aint array_of_displacements[], MPI_Datatype oldtype, MPI_Datatype * newtype)
+ {
+   int retvalue; 
+   TAU_PROFILE_TIMER(t, "MPI_Type_create_hindexed()", "", TAU_MESSAGE); 
+@@ -535,7 +535,7 @@
+ /******************************************************
+ ***      MPI_Type_create_hindexed wrapper function 
+ ******************************************************/
+-void MPI_TYPE_CREATE_HINDEXED( MPI_Fint *  count, MPI_Fint *  array_of_blocklengths, MPI_Aint * array_of_displacements, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
++void MPI_TYPE_CREATE_HINDEXED( MPI_Fint *  count, MPI_Fint array_of_blocklengths[], MPI_Aint array_of_displacements[], MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_Datatype local_type;
+   *ierr = MPI_Type_create_hindexed( *count, array_of_blocklengths, array_of_displacements, MPI_Type_f2c(*oldtype), &local_type) ; 
+@@ -546,7 +546,7 @@
+ /******************************************************
+ ***      MPI_Type_create_hindexed wrapper function 
+ ******************************************************/
+-void mpi_type_create_hindexed( MPI_Fint *  count, MPI_Fint *  array_of_blocklengths, MPI_Aint * array_of_displacements, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
++void mpi_type_create_hindexed( MPI_Fint *  count, MPI_Fint array_of_blocklengths[], MPI_Aint array_of_displacements[], MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_TYPE_CREATE_HINDEXED( count, array_of_blocklengths, array_of_displacements, oldtype, newtype, ierr) ; 
+   return ; 
+@@ -555,7 +555,7 @@
+ /******************************************************
+ ***      MPI_Type_create_hindexed wrapper function 
+ ******************************************************/
+-void mpi_type_create_hindexed_( MPI_Fint *  count, MPI_Fint *  array_of_blocklengths, MPI_Aint * array_of_displacements, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
++void mpi_type_create_hindexed_( MPI_Fint *  count, MPI_Fint array_of_blocklengths[], MPI_Aint array_of_displacements[], MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_TYPE_CREATE_HINDEXED( count, array_of_blocklengths, array_of_displacements, oldtype, newtype, ierr) ; 
+   return ; 
+@@ -564,7 +564,7 @@
+ /******************************************************
+ ***      MPI_Type_create_hindexed wrapper function 
+ ******************************************************/
+-void mpi_type_create_hindexed__( MPI_Fint *  count, MPI_Fint *  array_of_blocklengths, MPI_Aint * array_of_displacements, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
++void mpi_type_create_hindexed__( MPI_Fint *  count, MPI_Fint array_of_blocklengths[], MPI_Aint array_of_displacements[], MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_TYPE_CREATE_HINDEXED( count, array_of_blocklengths, array_of_displacements, oldtype, newtype, ierr) ; 
+   return ; 
+@@ -632,7 +632,7 @@
+ /******************************************************
+ ***      MPI_Type_create_struct wrapper function 
+ ******************************************************/
+-int MPI_Type_create_struct( int count, TAU_MPICH3_CONST int * array_of_blocklengths, TAU_MPICH3_CONST MPI_Aint * array_of_displacements, TAU_MPICH3_CONST MPI_Datatype * array_of_types, MPI_Datatype * newtype)
++int MPI_Type_create_struct( int count, TAU_MPICH3_CONST int array_of_blocklengths[], TAU_MPICH3_CONST MPI_Aint array_of_displacements[], TAU_MPICH3_CONST MPI_Datatype array_of_types[], MPI_Datatype * newtype)
+ {
+   int retvalue; 
+   TAU_PROFILE_TIMER(t, "MPI_Type_create_struct()", "", TAU_MESSAGE); 
+@@ -645,7 +645,7 @@
+ /******************************************************
+ ***      MPI_Type_create_struct wrapper function 
+ ******************************************************/
+-void MPI_TYPE_CREATE_STRUCT( MPI_Fint *  count, MPI_Fint *  array_of_blocklengths, MPI_Aint * array_of_displacements, MPI_Fint * array_of_types, MPI_Fint * newtype, MPI_Fint * ierr)
++void MPI_TYPE_CREATE_STRUCT( MPI_Fint *  count, MPI_Fint array_of_blocklengths[], MPI_Aint array_of_displacements[], MPI_Fint array_of_types[], MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_Datatype local_type;
+   TAU_DECL_ALLOC_LOCAL(MPI_Datatype, ary_local_types, *count);
+@@ -658,7 +658,7 @@
+ /******************************************************
+ ***      MPI_Type_create_struct wrapper function 
+ ******************************************************/
+-void mpi_type_create_struct( MPI_Fint *  count, MPI_Fint *  array_of_blocklengths, MPI_Aint * array_of_displacements, MPI_Fint * array_of_types, MPI_Fint * newtype, MPI_Fint * ierr)
++void mpi_type_create_struct( MPI_Fint *  count, MPI_Fint array_of_blocklengths[], MPI_Aint array_of_displacements[], MPI_Fint array_of_types[], MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_TYPE_CREATE_STRUCT( count, array_of_blocklengths, array_of_displacements, array_of_types, newtype, ierr) ; 
+   return ; 
+@@ -667,7 +667,7 @@
+ /******************************************************
+ ***      MPI_Type_create_struct wrapper function 
+ ******************************************************/
+-void mpi_type_create_struct_( MPI_Fint *  count, MPI_Fint *  array_of_blocklengths, MPI_Aint * array_of_displacements, MPI_Fint * array_of_types, MPI_Fint * newtype, MPI_Fint * ierr)
++void mpi_type_create_struct_( MPI_Fint *  count, MPI_Fint array_of_blocklengths[], MPI_Aint array_of_displacements[], MPI_Fint array_of_types[], MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_TYPE_CREATE_STRUCT( count, array_of_blocklengths, array_of_displacements, array_of_types, newtype, ierr) ; 
+   return ; 
+@@ -676,7 +676,7 @@
+ /******************************************************
+ ***      MPI_Type_create_struct wrapper function 
+ ******************************************************/
+-void mpi_type_create_struct__( MPI_Fint *  count, MPI_Fint *  array_of_blocklengths, MPI_Aint * array_of_displacements, MPI_Fint * array_of_types, MPI_Fint * newtype, MPI_Fint * ierr)
++void mpi_type_create_struct__( MPI_Fint *  count, MPI_Fint array_of_blocklengths[], MPI_Aint array_of_displacements[], MPI_Fint array_of_types[], MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_TYPE_CREATE_STRUCT( count, array_of_blocklengths, array_of_displacements, array_of_types, newtype, ierr) ; 
+   return ; 
+@@ -4110,7 +4110,7 @@
+ /******************************************************
+ ***      MPI_Type_create_subarray wrapper function 
+ ******************************************************/
+-int MPI_Type_create_subarray( int ndims, TAU_MPICH3_CONST int * array_of_sizes, TAU_MPICH3_CONST int * array_of_subsizes, TAU_MPICH3_CONST int * array_of_starts, int order, MPI_Datatype oldtype, MPI_Datatype * newtype)
++int MPI_Type_create_subarray( int ndims, TAU_MPICH3_CONST int array_of_sizes[], TAU_MPICH3_CONST int array_of_subsizes[], TAU_MPICH3_CONST int array_of_starts[], int order, MPI_Datatype oldtype, MPI_Datatype * newtype)
+ {
+   int retvalue; 
+   TAU_PROFILE_TIMER(t, "MPI_Type_create_subarray()", "", TAU_MESSAGE); 
+@@ -4123,7 +4123,7 @@
+ /******************************************************
+ ***      MPI_Type_create_subarray wrapper function 
+ ******************************************************/
+-void MPI_TYPE_CREATE_SUBARRAY( MPI_Fint *  ndims, MPI_Fint *  array_of_sizes, MPI_Fint *  array_of_subsizes, MPI_Fint *  array_of_starts, MPI_Fint *  order, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
++void MPI_TYPE_CREATE_SUBARRAY( MPI_Fint *  ndims, MPI_Fint array_of_sizes[], MPI_Fint array_of_subsizes[], MPI_Fint array_of_starts[], MPI_Fint *  order, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_Datatype local_oldtype;
+   MPI_Datatype local_newtype; 
+@@ -4136,7 +4136,7 @@
+ /******************************************************
+ ***      MPI_Type_create_subarray wrapper function 
+ ******************************************************/
+-void mpi_type_create_subarray( MPI_Fint *  ndims, MPI_Fint *  array_of_sizes, MPI_Fint *  array_of_subsizes, MPI_Fint *  array_of_starts, MPI_Fint *  order, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
++void mpi_type_create_subarray( MPI_Fint *  ndims, MPI_Fint array_of_sizes[], MPI_Fint array_of_subsizes[], MPI_Fint array_of_starts[], MPI_Fint *  order, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_TYPE_CREATE_SUBARRAY( ndims, array_of_sizes, array_of_subsizes, array_of_starts, order, oldtype, newtype, ierr) ; 
+   return ; 
+@@ -4145,7 +4145,7 @@
+ /******************************************************
+ ***      MPI_Type_create_subarray wrapper function 
+ ******************************************************/
+-void mpi_type_create_subarray_( MPI_Fint *  ndims, MPI_Fint *  array_of_sizes, MPI_Fint *  array_of_subsizes, MPI_Fint *  array_of_starts, MPI_Fint *  order, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
++void mpi_type_create_subarray_( MPI_Fint *  ndims, MPI_Fint array_of_sizes[], MPI_Fint array_of_subsizes[], MPI_Fint array_of_starts[], MPI_Fint *  order, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_TYPE_CREATE_SUBARRAY( ndims, array_of_sizes, array_of_subsizes, array_of_starts, order, oldtype, newtype, ierr) ; 
+   return ; 
+@@ -4154,7 +4154,7 @@
+ /******************************************************
+ ***      MPI_Type_create_subarray wrapper function 
+ ******************************************************/
+-void mpi_type_create_subarray__( MPI_Fint *  ndims, MPI_Fint *  array_of_sizes, MPI_Fint *  array_of_subsizes, MPI_Fint *  array_of_starts, MPI_Fint *  order, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
++void mpi_type_create_subarray__( MPI_Fint *  ndims, MPI_Fint array_of_sizes[], MPI_Fint array_of_subsizes[], MPI_Fint array_of_starts[], MPI_Fint *  order, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_TYPE_CREATE_SUBARRAY( ndims, array_of_sizes, array_of_subsizes, array_of_starts, order, oldtype, newtype, ierr) ; 
+   return ; 
+@@ -4167,7 +4167,7 @@
+ /******************************************************
+ ***      MPI_Type_create_darray wrapper function 
+ ******************************************************/
+-int MPI_Type_create_darray( int size, int rank, int ndims, TAU_MPICH3_CONST int * array_of_gsizes, TAU_MPICH3_CONST int * array_of_distribs, TAU_MPICH3_CONST int * array_of_dargs, TAU_MPICH3_CONST int * array_of_psizes, int order, MPI_Datatype oldtype, MPI_Datatype * newtype)
++int MPI_Type_create_darray( int size, int rank, int ndims, TAU_MPICH3_CONST int array_of_gsizes[], TAU_MPICH3_CONST int array_of_distribs[], TAU_MPICH3_CONST int array_of_dargs[], TAU_MPICH3_CONST int array_of_psizes[], int order, MPI_Datatype oldtype, MPI_Datatype * newtype)
+ {
+   int retvalue; 
+   TAU_PROFILE_TIMER(t, "MPI_Type_create_darray()", "", TAU_MESSAGE); 
+@@ -4180,7 +4180,7 @@
+ /******************************************************
+ ***      MPI_Type_create_darray wrapper function 
+ ******************************************************/
+-void MPI_TYPE_CREATE_DARRAY( MPI_Fint *  size, MPI_Fint *  rank, MPI_Fint *  ndims, MPI_Fint *  array_of_gsizes, MPI_Fint *  array_of_distribs, MPI_Fint *  array_of_dargs, MPI_Fint *  array_of_psizes, MPI_Fint *  order, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
++void MPI_TYPE_CREATE_DARRAY( MPI_Fint *  size, MPI_Fint *  rank, MPI_Fint *  ndims, MPI_Fint array_of_gsizes[], MPI_Fint array_of_distribs[], MPI_Fint array_of_dargs[], MPI_Fint array_of_psizes[], MPI_Fint *  order, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_Datatype local_newtype;
+   *ierr = MPI_Type_create_darray( *size, *rank, *ndims, array_of_gsizes, array_of_distribs, array_of_dargs, array_of_psizes, *order, MPI_Type_f2c(*oldtype), &local_newtype) ; 
+@@ -4191,7 +4191,7 @@
+ /******************************************************
+ ***      MPI_Type_create_darray wrapper function 
+ ******************************************************/
+-void mpi_type_create_darray( MPI_Fint *  size, MPI_Fint *  rank, MPI_Fint *  ndims, MPI_Fint *  array_of_gsizes, MPI_Fint *  array_of_distribs, MPI_Fint *  array_of_dargs, MPI_Fint *  array_of_psizes, MPI_Fint *  order, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
++void mpi_type_create_darray( MPI_Fint *  size, MPI_Fint *  rank, MPI_Fint *  ndims, MPI_Fint array_of_gsizes[], MPI_Fint array_of_distribs[], MPI_Fint array_of_dargs[], MPI_Fint array_of_psizes[], MPI_Fint *  order, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_TYPE_CREATE_DARRAY( size, rank, ndims, array_of_gsizes, array_of_distribs, array_of_dargs, array_of_psizes, order, oldtype, newtype, ierr) ; 
+   return ; 
+@@ -4200,7 +4200,7 @@
+ /******************************************************
+ ***      MPI_Type_create_darray wrapper function 
+ ******************************************************/
+-void mpi_type_create_darray_( MPI_Fint *  size, MPI_Fint *  rank, MPI_Fint *  ndims, MPI_Fint *  array_of_gsizes, MPI_Fint *  array_of_distribs, MPI_Fint *  array_of_dargs, MPI_Fint *  array_of_psizes, MPI_Fint *  order, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
++void mpi_type_create_darray_( MPI_Fint *  size, MPI_Fint *  rank, MPI_Fint *  ndims, MPI_Fint array_of_gsizes[], MPI_Fint array_of_distribs[], MPI_Fint array_of_dargs[], MPI_Fint array_of_psizes[], MPI_Fint *  order, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_TYPE_CREATE_DARRAY( size, rank, ndims, array_of_gsizes, array_of_distribs, array_of_dargs, array_of_psizes, order, oldtype, newtype, ierr) ; 
+   return ; 
+@@ -4209,7 +4209,7 @@
+ /******************************************************
+ ***      MPI_Type_create_darray wrapper function 
+ ******************************************************/
+-void mpi_type_create_darray__( MPI_Fint *  size, MPI_Fint *  rank, MPI_Fint *  ndims, MPI_Fint *  array_of_gsizes, MPI_Fint *  array_of_distribs, MPI_Fint *  array_of_dargs, MPI_Fint *  array_of_psizes, MPI_Fint *  order, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
++void mpi_type_create_darray__( MPI_Fint *  size, MPI_Fint *  rank, MPI_Fint *  ndims, MPI_Fint array_of_gsizes[], MPI_Fint array_of_distribs[], MPI_Fint array_of_dargs[], MPI_Fint array_of_psizes[], MPI_Fint *  order, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_TYPE_CREATE_DARRAY( size, rank, ndims, array_of_gsizes, array_of_distribs, array_of_dargs, array_of_psizes, order, oldtype, newtype, ierr) ; 
+   return ; 
+@@ -8140,7 +8140,7 @@
+ /******************************************************
+ ***      MPI_Type_create_indexed_block wrapper function 
+ ******************************************************/
+-int MPI_Type_create_indexed_block( int count, int blocklength, TAU_MPICH3_CONST int * array_of_displacements, MPI_Datatype oldtype, MPI_Datatype * newtype)
++int MPI_Type_create_indexed_block( int count, int blocklength, TAU_MPICH3_CONST int array_of_displacements[], MPI_Datatype oldtype, MPI_Datatype * newtype)
+ {
+   int retvalue; 
+   TAU_PROFILE_TIMER(t, "MPI_Type_create_indexed_block()", "", TAU_MESSAGE); 
+@@ -8153,7 +8153,7 @@
+ /******************************************************
+ ***      MPI_Type_create_indexed_block wrapper function 
+ ******************************************************/
+-void MPI_TYPE_CREATE_INDEXED_BLOCK( MPI_Fint *  count, MPI_Fint *  blocklength, MPI_Fint *  array_of_displacements, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
++void MPI_TYPE_CREATE_INDEXED_BLOCK( MPI_Fint *  count, MPI_Fint *  blocklength, MPI_Fint array_of_displacements[], MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_Datatype local_type;
+   *ierr = MPI_Type_create_indexed_block( *count, *blocklength, array_of_displacements, MPI_Type_f2c(*oldtype), &local_type) ; 
+@@ -8164,7 +8164,7 @@
+ /******************************************************
+ ***      MPI_Type_create_indexed_block wrapper function 
+ ******************************************************/
+-void mpi_type_create_indexed_block( MPI_Fint *  count, MPI_Fint *  blocklength, MPI_Fint *  array_of_displacements, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
++void mpi_type_create_indexed_block( MPI_Fint *  count, MPI_Fint *  blocklength, MPI_Fint array_of_displacements[], MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_TYPE_CREATE_INDEXED_BLOCK( count, blocklength, array_of_displacements, oldtype, newtype, ierr) ; 
+   return ; 
+@@ -8173,7 +8173,7 @@
+ /******************************************************
+ ***      MPI_Type_create_indexed_block wrapper function 
+ ******************************************************/
+-void mpi_type_create_indexed_block_( MPI_Fint *  count, MPI_Fint *  blocklength, MPI_Fint *  array_of_displacements, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
++void mpi_type_create_indexed_block_( MPI_Fint *  count, MPI_Fint *  blocklength, MPI_Fint array_of_displacements[], MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_TYPE_CREATE_INDEXED_BLOCK( count, blocklength, array_of_displacements, oldtype, newtype, ierr) ; 
+   return ; 
+@@ -8182,7 +8182,7 @@
+ /******************************************************
+ ***      MPI_Type_create_indexed_block wrapper function 
+ ******************************************************/
+-void mpi_type_create_indexed_block__( MPI_Fint *  count, MPI_Fint *  blocklength, MPI_Fint *  array_of_displacements, MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
++void mpi_type_create_indexed_block__( MPI_Fint *  count, MPI_Fint *  blocklength, MPI_Fint array_of_displacements[], MPI_Fint *  oldtype, MPI_Fint * newtype, MPI_Fint * ierr)
+ {
+   MPI_TYPE_CREATE_INDEXED_BLOCK( count, blocklength, array_of_displacements, oldtype, newtype, ierr) ; 
+   return ; 

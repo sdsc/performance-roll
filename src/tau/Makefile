@@ -91,6 +91,17 @@ LICENSE: $(SRC_DIRS)
 
 build: $(SRC_DIRS)
 	patch $(SOURCE_DIR)/configure patch-files/configure.patch
+	patch $(SOURCE_DIR)/utils/tau_instrumentor.cpp patch-files/tau_instrumentor.cpp.patch
+	patch $(SOURCE_DIR)/src/Profile/TauMpiExtensions.c patch-files/TauMpiExtensions.c.array-params.patch
+	$(MODULE_LOAD_CC); \
+	$(MODULE_LOAD_MPI); \
+	if grep -q 'const  *void *\* *sendbuf' $${MPIHOME}/include/mpi.h; then \
+	  patch $(SOURCE_DIR)/src/Profile/TauMpi.c patch-files/TauMpi.c.const-sendbuf.patch; \
+	  patch $(SOURCE_DIR)/src/Profile/TauMpiExtensions.c patch-files/TauMpiExtensions.c.const-sendbuf.patch; \
+	fi; \
+	if grep -q 'MPI_Address *( *void' $${MPIHOME}/include/mpi.h; then \
+	  patch $(SOURCE_DIR)/src/Profile/TauMpi.c patch-files/TauMpi.c.noconst-deprecated.patch; \
+	fi
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
