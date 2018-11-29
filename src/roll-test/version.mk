@@ -1,6 +1,6 @@
 NAME       = sdsc-performance-roll-test
-VERSION    = 1
-RELEASE    = 11
+VERSION    = 2
+RELEASE    = 0
 PKGROOT    = /root/rolltests
 
 RPM.EXTRAS = AutoReq:No\nAutoProv:No
