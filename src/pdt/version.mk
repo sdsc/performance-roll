@@ -4,13 +4,13 @@ endif
 COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
 NAME           = sdsc-pdt_$(ROLLCOMPILER)
-VERSION        = 3.20
-RELEASE        = 4
+VERSION        = 3.25
+RELEASE        = 0
 PKGROOT        = /opt/pdt/$(ROLLCOMPILER)
 
 SRC_SUBDIR     = pdt
 
-SOURCE_NAME    = pdtoolkit
+SOURCE_NAME    = pdt
 SOURCE_SUFFIX  = tgz
 SOURCE_VERSION = $(VERSION)
 SOURCE_PKG     = $(SOURCE_NAME)-$(SOURCE_VERSION).$(SOURCE_SUFFIX)
