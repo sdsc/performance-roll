@@ -3,6 +3,11 @@ ifndef ROLLCOMPILER
 endif
 COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
+ifndef ROLLMPI
+  ROLLMPI = rocks-openmpi
+endif
+MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
+
 NAME           = sdsc-papi_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 5.6.0
 RELEASE        = 0
