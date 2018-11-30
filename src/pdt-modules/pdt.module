@@ -12,7 +12,7 @@ module-whatis "Compiler: $compilernames"
 # module.  Report an error if neither applies.
 if [info exists env(PDTHOME)] {
   foreach {compiler} $compilernames {
-    if {[string first "/$compiler" $::env(PDTHOME)] >= 0} {
+    if {[string first "/$compiler/" $::env(PDTHOME)] >= 0} {
       break
     }
   }
