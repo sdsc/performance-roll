@@ -102,7 +102,7 @@ build: $(SRC_DIRS)
 	  export LDFLAGS="$(CONFIGURE_FLAGS)"; \
 	  cd $(SOURCE_DIR)/src; \
 	  export MPICC=$${MPIHOME}/bin/mpicc; \
-	  ./configure --prefix=$(PKGROOT) --with-libpfm4; \
+	  ./configure --prefix=$(PKGROOT); \
 	  $(MAKE) \
 	)
 	@echo "::: Package $(NAME) build complete :::"
