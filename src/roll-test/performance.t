@@ -130,18 +130,20 @@ SKIP: {
   skip 'papi not installed', 1 if ! -d $packageHome;
 
 foreach my $compiler (@COMPILERS) {
+  foreach my $mpi (@MPIS) {
   open(OUT, ">$TESTFILE.sh");
   print OUT <<END;
 module unload intel
-module load $compiler papi
+module load $compiler $mpi papi
 $CC{$compiler} -I\$PAPIHOME/include -o $TESTFILE-papi.exe \$PAPIHOME/examples/PAPI_state.c -L\$PAPIHOME/lib -lpapi -pthread
 ./$TESTFILE-papi.exe
 END
 
   close(OUT);
   $output = `/bin/bash $TESTFILE.sh 2>&1`;
-  like($output, qr/Eventset is currently running /, "papi sample run for the $compiler compiler");
+  like($output, qr/Eventset is currently running /, "papi sample run for the $compiler compiler and $mpi");
   `rm -f $TESTFILE-papi.exe $TESTFILE.sh`;
+}
 }
 
 }
