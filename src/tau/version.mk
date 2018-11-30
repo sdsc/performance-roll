@@ -9,8 +9,8 @@ endif
 MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
 NAME           = sdsc-tau_$(COMPILERNAME)_$(MPINAME)
-VERSION        = 2.23
-RELEASE        = 6
+VERSION        = 2.28
+RELEASE        = 0
 PKGROOT        = /opt/tau/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = tau
