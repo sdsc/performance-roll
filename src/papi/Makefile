@@ -73,7 +73,7 @@ else ifeq ("$(COMPILERNAME)", "pgi")
   CONFIGURE_FLAGS = -noswitcherror
 endif
 
-PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)
+PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)-$(MPINAME)
 
 $(NAME).spec: DESCRIPTION LICENSE
 
