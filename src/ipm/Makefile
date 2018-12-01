@@ -80,8 +80,6 @@ LICENSE: $(SRC_DIRS)
 	echo University of California > $@
 
 build: $(SRC_DIRS)
-	patch $(SOURCE_DIR)/etc/wrap_mpi_c.c patch-files/wrap_mpi_c.c.patch
-	patch $(SOURCE_DIR)/bin/make_wrappers patch-files/make_wrappers.patch
 	( \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MPI); \
@@ -101,10 +99,6 @@ build: $(SRC_DIRS)
 	  export MPICC=`which mpicc`; \
 	  export LD_LIBRARY_PATH=$(PAPI_CACHE)/lib:$${LD_LIBRARY_PATH}; \
 	  export MXML_HOME=$(MXML_CACHE); \
-	  mkdir -p `pwd`/openmpi/ompi/mpi/f77; \
-	  cp ../*.h .; \
-	  cp ../*.h openmpi/; \
-	  cp ../constants.h openmpi/ompi/mpi/f77/; \
 	  export CFLAGS="$${CFLAGS} -I`pwd`"; \
 	  export CXXFLAGS="$${CFLAGS} -I`pwd`"; \
 	  ./configure --prefix=$(PKGROOT) --with-papi=$(PAPI_CACHE) \
