@@ -1,4 +1,4 @@
-# $Id$
+# I$d$
 #
 # @Copyright@
 #
@@ -93,17 +93,15 @@ build: $(SRC_DIRS)
 	  export F77=$(F77); \
 	  export CXX=$(CXX); \
 	  export LDFLAGS="-L$(MXML_CACHE)/lib -lpthread"; \
-	  export CFLAGS=-I$(MXML_CACHE)/include ; \
-	  export CXXFLAGS=-I$(MXML_CACHE)/include; \
+	  export CFLAGS=-I$(MXML_CACHE)/include -I`pwd`; \
+	  export CXXFLAGS=-I$(MXML_CACHE)/include -I`pwd`; \
 	  export MPIF77=`which mpif77`; \
 	  export MPICC=`which mpicc`; \
 	  export LD_LIBRARY_PATH=$(PAPI_CACHE)/lib:$${LD_LIBRARY_PATH}; \
 	  export MXML_HOME=$(MXML_CACHE); \
-	  export CFLAGS="$${CFLAGS} -I`pwd`"; \
-	  export CXXFLAGS="$${CFLAGS} -I`pwd`"; \
 	  ./configure --prefix=$(PKGROOT) --with-papi=$(PAPI_CACHE) \
 	    --enable-posixio=yes --enable-parser --disable-shared; \
-	  make \
+	  make FCLD=`which mpif90` \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 	
