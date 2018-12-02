@@ -101,7 +101,7 @@ build: $(SRC_DIRS)
 	  export MXML_HOME=$(MXML_CACHE); \
 	  ./configure --prefix=$(PKGROOT) --with-papi=$(PAPI_CACHE) \
 	    --enable-posixio=yes --enable-parser --disable-shared; \
-	  make FCLD=`which mpif90` \
+	  make FCLD=`which mpif90` F77LD=`which mpif77` \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 	
