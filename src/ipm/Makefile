@@ -102,7 +102,8 @@ build: $(SRC_DIRS)
 	  export MXML_HOME=$(MXML_CACHE); \
 	  ./configure --prefix=$(PKGROOT) --with-papi=$(PAPI_CACHE) \
 	    --enable-posixio=yes --enable-parser --disable-shared; \
-	  make FC=$(F90) \
+	  sed -i  "s/--mode=link \$$(FCLD)/--mode=link $(FC)/g" src/Makefile; \
+	  make  \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 	
