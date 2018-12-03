@@ -50,7 +50,7 @@ if [info exists env(PAPIHOME)] {
 }
 
 
-setenv PAPIHOME /opt/papi/$compiler
-prepend-path PATH /opt/papi/$compiler/bin
-setenv PAPI_BASE /opt/papi/$compiler
-prepend-path LD_LIBRARY_PATH /opt/papi/$compiler/lib
+setenv PAPIHOME /opt/papi/$compiler/$mpi
+prepend-path PATH /opt/papi/$compiler/$mpi/bin
+setenv PAPI_BASE /opt/papi/$compiler/$mpi
+prepend-path LD_LIBRARY_PATH /opt/papi/$compiler/$mpi/lib
