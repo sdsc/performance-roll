@@ -71,8 +71,8 @@ else ifeq ("$(COMPILERNAME)", "pgi")
   FORTRAN = pgi
 endif
 
-PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)
-PAPI_INSTALL = /opt/papi/$(COMPILERNAME)
+PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)-$(MPINAME)
+PAPI_INSTALL = /opt/papi/$(COMPILERNAME)/$(MPINAME)
 PDT_CACHE = $(REDHAT.ROOT)/cache/build-pdt-$(COMPILERNAME)
 PDT_INSTALL = /opt/pdt/$(COMPILERNAME)
 
