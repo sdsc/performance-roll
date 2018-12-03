@@ -91,6 +91,7 @@ build: $(SRC_DIRS)
 	  autoconf; \
 	  export CC=$(CC); \
 	  export F77=$(F77); \
+	  export FC=$(F90); \
 	  export CXX=$(CXX); \
 	  export LDFLAGS="-L$(MXML_CACHE)/lib -lpthread"; \
 	  export CFLAGS=-I$(MXML_CACHE)/include -I`pwd`; \
@@ -101,7 +102,7 @@ build: $(SRC_DIRS)
 	  export MXML_HOME=$(MXML_CACHE); \
 	  ./configure --prefix=$(PKGROOT) --with-papi=$(PAPI_CACHE) \
 	    --enable-posixio=yes --enable-parser --disable-shared; \
-	  make FCLD=`which mpif90` F77LD=`which mpif77` \
+	  make \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 	
