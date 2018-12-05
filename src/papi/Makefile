@@ -73,7 +73,7 @@ else ifeq ("$(COMPILERNAME)", "pgi")
   CONFIGURE_FLAGS = -noswitcherror
 endif
 
-PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)
+PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)-$(MPINAME)
 
 $(NAME).spec: DESCRIPTION LICENSE
 
@@ -102,7 +102,7 @@ build: $(SRC_DIRS)
 	  export LDFLAGS="$(CONFIGURE_FLAGS)"; \
 	  cd $(SOURCE_DIR)/src; \
 	  export MPICC=$${MPIHOME}/bin/mpicc; \
-	  ./configure --prefix=$(PKGROOT) --with-libpfm4; \
+	  ./configure --prefix=$(PKGROOT); \
 	  $(MAKE) \
 	)
 	@echo "::: Package $(NAME) build complete :::"
@@ -112,9 +112,8 @@ install::
 	( \
 	  cd $(SOURCE_DIR)/src; \
 	  make prefix=$(ROOT)/$(PKGROOT) install; \
-          cp testlib/libtestlib.a $(ROOT)/$(PKGROOT)/lib; \
-          cp testlib/*.h $(ROOT)/$(PKGROOT)/include; \
           chmod 0664 $(ROOT)/$(PKGROOT)/include/*.h; \
+          cp -r examples  $(ROOT)/$(PKGROOT) \
 	)
 	mkdir -p -m 755 $(PAPI_CACHE)
 	cp -r $(ROOT)/$(PKGROOT)/* $(PAPI_CACHE)/

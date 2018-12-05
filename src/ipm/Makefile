@@ -63,7 +63,7 @@ include $(SDSCDEVEL)/Pull.mk
 include $(SDSCDEVEL)/Rules.mk
 
 MXML_CACHE = $(REDHAT.ROOT)/cache/build-mxml-$(COMPILERNAME)
-PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)
+PAPI_CACHE = $(REDHAT.ROOT)/cache/build-papi-$(COMPILERNAME)-$(MPINAME)
 
 $(NAME).spec: DESCRIPTION LICENSE
 

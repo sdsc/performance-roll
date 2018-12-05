@@ -22,7 +22,7 @@ All rights reserved. Rocks(r) v7.0 www.rocksclusters.org
 
 <package>sdsc-ipm_COMPILERNAME_MPINAME</package>
 <package>sdsc-mxml_COMPILERNAME</package>
-<package>sdsc-papi_COMPILERNAME</package>
+<package>sdsc-papi_COMPILERNAME_MPINAME</package>
 <package>sdsc-pdt_COMPILERNAME</package>
 <package>sdsc-tau_COMPILERNAME_MPINAME</package>
 <package>sdsc-ipm-modules</package>
