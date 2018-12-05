@@ -4,8 +4,8 @@ endif
 COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
 NAME           = sdsc-pdt_$(ROLLCOMPILER)
-VERSION        = 3.20
-RELEASE        = 4
+VERSION        = 3.25
+RELEASE        = 0
 PKGROOT        = /opt/pdt/$(ROLLCOMPILER)
 
 SRC_SUBDIR     = pdt
