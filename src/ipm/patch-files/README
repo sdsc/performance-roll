@@ -1,7 +1,0 @@
-make_wrappers.patch
-  - MPI3CONST appears undefined when compiling the wrapper, causing syntax
-    errors.
-  - const qualifiers in MPI function signatures cause compilation failures
-    for ROLLMPI=rocks-openmpi, and other flavors compile fine without.
-wrap_mpi_c.c.patch
-  - syntax errors if opal_config.h and constants.h are not #included

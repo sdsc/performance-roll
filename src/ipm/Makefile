@@ -1,4 +1,4 @@
-# $Id$
+# I$d$
 #
 # @Copyright@
 #
@@ -80,8 +80,6 @@ LICENSE: $(SRC_DIRS)
 	echo University of California > $@
 
 build: $(SRC_DIRS)
-	patch $(SOURCE_DIR)/etc/wrap_mpi_c.c patch-files/wrap_mpi_c.c.patch
-	patch $(SOURCE_DIR)/bin/make_wrappers patch-files/make_wrappers.patch
 	( \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MPI); \
@@ -93,23 +91,19 @@ build: $(SRC_DIRS)
 	  autoconf; \
 	  export CC=$(CC); \
 	  export F77=$(F77); \
+	  export FC=$(F90); \
 	  export CXX=$(CXX); \
 	  export LDFLAGS="-L$(MXML_CACHE)/lib -lpthread"; \
-	  export CFLAGS=-I$(MXML_CACHE)/include ; \
-	  export CXXFLAGS=-I$(MXML_CACHE)/include; \
+	  export CFLAGS=-I$(MXML_CACHE)/include -I`pwd`; \
+	  export CXXFLAGS=-I$(MXML_CACHE)/include -I`pwd`; \
 	  export MPIF77=`which mpif77`; \
 	  export MPICC=`which mpicc`; \
 	  export LD_LIBRARY_PATH=$(PAPI_CACHE)/lib:$${LD_LIBRARY_PATH}; \
 	  export MXML_HOME=$(MXML_CACHE); \
-	  mkdir -p `pwd`/openmpi/ompi/mpi/f77; \
-	  cp ../*.h .; \
-	  cp ../*.h openmpi/; \
-	  cp ../constants.h openmpi/ompi/mpi/f77/; \
-	  export CFLAGS="$${CFLAGS} -I`pwd`"; \
-	  export CXXFLAGS="$${CFLAGS} -I`pwd`"; \
 	  ./configure --prefix=$(PKGROOT) --with-papi=$(PAPI_CACHE) \
 	    --enable-posixio=yes --enable-parser --disable-shared; \
-	  make \
+	  sed -i  "s/--mode=link \$$(FCLD)/--mode=link $(FC)/g" src/Makefile; \
+	  make  \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 	
